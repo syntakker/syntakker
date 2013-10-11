@@ -1,4 +1,3 @@
 syntakker
 =========
 
-Hello world!
