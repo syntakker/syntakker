@@ -6,4 +6,9 @@ build:
 test: build
 	./firstTest.native
 
+clean:
+	rm *.native
+	rm *~
+	rm -rf _build
+
 .PHONY: all
