@@ -1,0 +1,7 @@
+<*Test.*>: package(kaputt)
+true: bin_annot
+true: use_unix
+true: use_str
+true: use_nums
+
+<src/*>: include
