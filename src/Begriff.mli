@@ -1,9 +1,14 @@
 (** Module [Begriff] aims at a maximally reduced representation of a
     syntax tree. The implementation is focused on simplicity to avoid
     the obscurity of side-effects and to allow for a concise formal
-    description of operations on the data structure. Roughly, it
-    implements a representation of sets of s-expressions with perfect
-    sharing.
+    description of operations on the data structure.
+
+    Roughly, [Begriff] implements a representation of sets of
+    s-expressions with perfect sharing. Unlike standard s-expressions,
+    however, associativity is left, i.e. [(a b c)] actually is
+    interpreted as [((a b) c)] as in application of a function to its
+    arguments with currying, and not as [(a (b c))] as for lists with
+    cons. 
 *)
 
 open Sexplib
@@ -110,7 +115,7 @@ val add_sexp: Sexp.t -> plan -> atom
 (** Adds an s-expression to a plan *)
  
 val read_sexp: atom -> plan -> Sexp.t
-(** returns the expression referred to by an [atom] as s-expression *)
+(** returns the expression an [atom] refers to as s-expression *)
 
 
 val of_string: string -> plan -> atom
