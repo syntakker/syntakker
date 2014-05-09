@@ -76,7 +76,7 @@ Test.add_simple_test ~title:"abstract nodes as s-expression" (fun () ->
   let plan = Begriff.empty_plan () in
   let func = Begriff.next_atom plan in
   let arg = Begriff.next_atom plan in
-  let app = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
+  let _ = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
   let read_sexp = Begriff.read_sexp (Begriff.atom_of_int 3) plan in
   Assert.equal ~msg:"expression not correctly rendered" "(($$node 1)($$node 2))" (Sexp.to_string read_sexp);
 )
