@@ -28,12 +28,15 @@ type atom
 *)
 
 type bindung
-(** [bindung] is the elementary element of any structure. It
+(** [bindung] is the base element of any structure. It
     connects three nodes: [(app, func, arg):bindung]. Note that
     there is no constructor to connect only two nodes, as the
     connection of two nodes automatically introduces an additional
     node, which represents this connection. [app] is the reference
     to a node constructed by applying [func] to [arg].
+
+    Note that the combination of [func] and [arg] is as well a unique
+    identifier for a node as [app].
 *)
 
 type plan
