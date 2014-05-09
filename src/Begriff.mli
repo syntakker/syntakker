@@ -23,6 +23,7 @@ val app_of_bindung: bindung -> atom
 
 val next_atom: plan -> atom
 val last_atom: plan -> atom
+val plan_size: plan -> int
 
 val add_zeichen: zeichen -> plan -> atom
 val find_zeichen: atom -> plan -> zeichen option
@@ -32,5 +33,8 @@ val find_bindung: atom -> atom -> plan -> bindung option
 
 val add_sexp: Sexp.t -> plan -> atom
 val read_sexp: atom -> plan -> Sexp.t
+
+val of_string: string -> plan -> atom
+val to_string: atom -> plan -> string
 
 val is_reserved_word: string -> bool

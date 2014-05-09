@@ -93,5 +93,26 @@ Test.add_simple_test ~title:"no reserved words can be inserted" (fun () ->
 )
 ;;
 
+Test.add_simple_test ~title:"Read s-expresion" (fun () ->
+  let plan = Begriff.empty_plan () in
+  let sexp = Begriff.of_string
+    "((doctype)
+ (html
+     (head
+          (title \"Nuki!\")
+          (meta (http-equiv: \"Content-Type\" content:\"text-html\")))
+    (body
+        (div (id:\"main\")
+             (div (id:\"header\")
+                \"I'm a header!\")))))"
+    plan
+  in
+  Assert.equal
+    "(doctype((html((head(title Nuki!))(meta(((http-equiv: Content-Type)content:)text-html))))(body((div(id: main))((div(id: header))\"I'm a header!\")))))" 
+    (Begriff.to_string sexp plan);
+  Assert.equal 33 (Begriff.int_of_atom sexp)
+)
+;;
+
 launch_tests ()
 ;;

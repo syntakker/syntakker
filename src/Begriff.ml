@@ -69,6 +69,8 @@ let next_atom = fun plan ->
 
 let last_atom = fun plan -> !(plan.sequence)
 
+let plan_size = last_atom
+
 let map_find = fun atom map ->
   if IntMap.mem atom map
   then Some (IntMap.find atom map)
@@ -159,4 +161,9 @@ let rec read_sexp = fun atom plan ->
           let arg = arg_of_bindung bindung in
           Sexp.List [read_sexp func plan ;read_sexp arg plan]
     
-       
+
+let of_string = fun sexp_string plan ->
+  add_sexp (Sexp.of_string sexp_string) plan
+
+let to_string = fun atom plan ->
+  Sexp.to_string (read_sexp atom plan)     
