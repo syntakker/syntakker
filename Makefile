@@ -11,6 +11,6 @@ clean:
 	find . -name '_build' | xargs rm -rf
 	find . -name '*.native' | xargs rm -f
 	find . -name '*~' | xargs rm -f
-	rm *.docdir
+	rm -f *.docdir
 
 .PHONY: build test clean
