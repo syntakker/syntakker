@@ -29,3 +29,4 @@ val add_new_bindung: bindung -> plan -> atom
 val find_bindung: atom -> atom -> plan -> bindung option
 
 val add_sexp: Sexp.t -> plan -> atom
+val read_sexp: atom -> plan -> Sexp.t

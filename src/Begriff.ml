@@ -137,3 +137,15 @@ let rec add_sexp = fun sexp plan ->
       add_new_bindung (bindung_of_func_arg func arg) plan
     | Sexp.List (func::arg::args) -> add_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
     | Sexp.List [] -> atom_of_int 0
+
+let rec read_sexp = fun atom plan ->
+  match map_find atom !(plan.atom_zeichen) with
+      Some zeichen -> Sexp.Atom (string_of_zeichen zeichen)
+    | None -> match map_find atom !(plan.app_bindung) with
+        None -> Sexp.List [Sexp.Atom "$$node";Sexp.Atom (string_of_int (int_of_atom atom))]
+        | Some bindung ->
+          let func = func_of_bindung bindung in
+          let arg = arg_of_bindung bindung in
+          Sexp.List [read_sexp func plan ;read_sexp arg plan]
+    
+       
