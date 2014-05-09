@@ -10,6 +10,8 @@ exception Reserved_word of string
 
 val empty_plan: unit -> plan
 
+val is_reserved_word: string -> bool
+
 val zeichen_of_string: string -> zeichen
 val string_of_zeichen: zeichen -> string
 
@@ -36,6 +38,4 @@ val read_sexp: atom -> plan -> Sexp.t
 
 val of_string: string -> plan -> atom
 val to_string: atom -> plan -> string
-
-val is_reserved_word: string -> bool
 

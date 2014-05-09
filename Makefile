@@ -7,8 +7,8 @@ test: build
 	./firstTest.native
 
 clean:
-	rm -f *.native
-	rm -f *~
-	rm -rf _build
+	find . -name '_build' | xargs rm -rf
+	find . -name '*.native' | xargs rm -f
+	find . -name '*~' | xargs rm -f
 
 .PHONY: all
