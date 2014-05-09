@@ -40,7 +40,7 @@ Test.add_simple_test ~title:"write and read a bindung" (fun () ->
   Assert.equal ~msg:"wrong number for atom 2" (Begriff.atom_of_int 2) arg;
   let app = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
   Assert.equal ~msg:"wrong number for bindung" (Begriff.atom_of_int 3) app;
-  let found = Begriff.find_bindung func arg plan in
+  let found = Begriff.find_bindung_func_arg func arg plan in
   Assert.is_some ~msg:"no bindung found" found;
   match found with
       None -> Assert.fail_msg "bindung not found"
@@ -107,10 +107,28 @@ Test.add_simple_test ~title:"Read s-expression" (fun () ->
                 \"I'm a header!\")))))"
     plan
   in
-  Assert.equal
+  Assert.equal ~msg:"Rendering not correct"
     "(doctype((html((head(title Nuki!))(meta(((http-equiv: Content-Type)content:)text-html))))(body((div(id: main))((div(id: header))\"I'm a header!\")))))" 
     (Begriff.to_string sexp plan);
   Assert.equal 33 (Begriff.int_of_atom sexp)
+)
+;;
+
+Test.add_simple_test ~title:"Read s-expression" (fun () ->
+  let plan = Begriff.empty_plan () in
+  let _ = Begriff.of_string "((acht _ cola) ( _  acht bier))" plan in
+  (match Begriff.find_bindung_app (Begriff.atom_of_int 2) plan
+   with None -> Assert.fail_msg "bindung not found"
+     | Some bindung ->
+       Assert.equal ~msg:"Argument of node 2 should be '_'"
+         0
+         (Begriff.int_of_atom (Begriff.arg_of_bindung bindung)));
+  match Begriff.find_bindung_app (Begriff.atom_of_int 5) plan
+  with None -> Assert.fail_msg "bindung not found"
+    | Some bindung ->
+      Assert.equal ~msg:"Function of node 5 should be '_'"
+        0
+        (Begriff.int_of_atom (Begriff.func_of_bindung bindung));
 )
 ;;
 

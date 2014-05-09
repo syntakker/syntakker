@@ -30,8 +30,8 @@ let empty_plan = fun () ->
   {
     sequence = ref 0;
 
-    zeichen_atom = ref String.Map.empty;
-    atom_zeichen = ref Int.Map.empty;
+    zeichen_atom = ref (Map.add String.Map.empty ~key:"_" ~data:0);
+    atom_zeichen = ref (Map.add Int.Map.empty ~key:0 ~data:"_");
 
     func_arg_app = ref Int.Map.empty;
     arg_func_app = ref Int.Map.empty;
@@ -123,17 +123,19 @@ let add_new_bindung = fun bindung plan ->
                 let _ = map_map_ref_add arg func app (plan.arg_func_app) in
                 let _ = map_ref_add app bindung (plan.app_bindung) in
                 app
+
+let find_bindung_app = fun app plan ->
+  Map.find !(plan.app_bindung) app
   
-let find_bindung = fun func arg plan ->
+let find_bindung_func_arg = fun func arg plan ->
   match map_map_ref_find func arg (plan.func_arg_app)
   with None -> None
-    | Some app -> Map.find !(plan.app_bindung) app
+    | Some app -> find_bindung_app app plan
 
 
 let rec add_sexp = fun sexp plan ->
   match sexp
-  with Sexp.Atom "_" -> (atom_of_int 0)
-    | Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
+  with Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
     | Sexp.List [func] -> add_sexp func plan
     | Sexp.List [func; arg] -> 
       let func = add_sexp func plan in

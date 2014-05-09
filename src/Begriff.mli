@@ -29,11 +29,17 @@ type zeichen
 
     Note that labels of type [zeichen] are unique identifiers, i.e.,
     two distinct nodes cannot be labeled by the same [zeichen].
+
+    A special role is assumed by the string "_", the label of node
+    0. The semantic is, like in OCaml, that of a placeholder with
+    unspecified value.
 *)
 
 type atom
 (** [atom] is a unique identifier of a node, its current implementation
     is type [int].
+
+    Node 0, the placeholder node, is labeled by "_".
 *)
 
 type bindung
@@ -120,8 +126,11 @@ val add_new_bindung: bindung -> plan -> atom
     new).
 *)
 
-val find_bindung: atom -> atom -> plan -> bindung option
-(** returns the [bindung] an [atom] refers to, if there is one. *)
+val find_bindung_app: atom -> plan -> bindung option
+(** returns the [bindung] the node [app] refers to, if there is one. *)
+
+val find_bindung_func_arg: atom -> atom -> plan -> bindung option
+(** returns the [bindung] with function [func] and argument [arg], if there is one. *)
 
 val add_sexp: Sexp.t -> plan -> atom
 (** Adds an s-expression to a plan *)
