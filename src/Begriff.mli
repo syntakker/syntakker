@@ -28,11 +28,11 @@ type zeichen
     kinds of labels might be considered in the future. 
 
     Note that labels of type [zeichen] are unique identifiers, i.e.,
-    two distinct nodes can be labeled by the same [zeichen].
+    two distinct nodes cannot be labeled by the same [zeichen].
 *)
 
 type atom
-(** [atom] is an identifier of a unique node, its current implementation
+(** [atom] is a unique identifier of a node, its current implementation
     is type [int].
 *)
 
