@@ -93,7 +93,7 @@ Test.add_simple_test ~title:"no reserved words can be inserted" (fun () ->
 )
 ;;
 
-Test.add_simple_test ~title:"Read s-expresion" (fun () ->
+Test.add_simple_test ~title:"Read s-expression" (fun () ->
   let plan = Begriff.empty_plan () in
   let sexp = Begriff.of_string
     "((doctype)
