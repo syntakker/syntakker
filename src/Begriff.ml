@@ -1,3 +1,5 @@
+open Sexplib
+
 module IntMap = Map.Make(struct type t = int let compare = compare end)
 module StringMap = Map.Make(struct type t = string let compare = compare end)
 
@@ -57,6 +59,7 @@ let next_atom = fun plan ->
   let _ = plan.sequence := next in
   next
 
+let last_atom = fun plan -> !(plan.sequence)
 
 let map_find = fun atom map ->
   if IntMap.mem atom map
@@ -122,3 +125,15 @@ let find_bindung = fun func arg plan ->
   match map_map_ref_find func arg (plan.func_arg_app) with
       None -> None
     | Some app -> map_find app !(plan.app_bindung)
+
+
+let rec add_sexp = fun sexp plan ->
+  match sexp with
+      Sexp.Atom zeichen -> add_zeichen (zeichen_of_string zeichen) plan
+    | Sexp.List [func] -> add_sexp func plan
+    | Sexp.List [func; arg] -> 
+      let func = add_sexp func plan in
+      let arg = add_sexp arg plan in
+      add_new_bindung (bindung_of_func_arg func arg) plan
+    | Sexp.List (func::arg::args) -> add_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
+    | Sexp.List [] -> atom_of_int 0

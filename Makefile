@@ -7,8 +7,8 @@ test: build
 	./firstTest.native
 
 clean:
-	rm *.native
-	rm *~
+	rm -f *.native
+	rm -f *~
 	rm -rf _build
 
 .PHONY: all

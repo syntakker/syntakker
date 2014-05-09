@@ -1,3 +1,5 @@
+open Sexplib
+
 type zeichen
 type atom
 type bindung
@@ -18,9 +20,12 @@ val arg_of_bindung: bindung -> atom
 val app_of_bindung: bindung -> atom
 
 val next_atom: plan -> atom
+val last_atom: plan -> atom
 
 val add_zeichen: zeichen -> plan -> atom
 val find_zeichen: atom -> plan -> zeichen option
 
 val add_new_bindung: bindung -> plan -> atom
 val find_bindung: atom -> atom -> plan -> bindung option
+
+val add_sexp: Sexp.t -> plan -> atom

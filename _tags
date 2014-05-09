@@ -1,6 +1,5 @@
-<*Test.*>: package(kaputt)
+<*Test.*>: package(kaputt), package(sexplib)
 true: bin_annot
-true: use_unix
 true: use_str
 true: use_nums
 
