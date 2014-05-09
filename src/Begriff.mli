@@ -8,7 +8,16 @@
     however, associativity is left, i.e. [(a b c)] actually is
     interpreted as [((a b) c)] as in application of a function to its
     arguments with currying, and not as [(a (b c))] as for lists with
-    cons. 
+    cons.
+
+    The term "Begriff" is of German origin and might be familiar to
+    logicians, as it is part of the composed word "Begriffsschrift" (a
+    formal system at the border between language and formal
+    mathematics, developed by Gottlob Frege). It roughly means "word",
+    but the subtle associations do also refer to something which
+    translates roughly to "handle" in English. This describes an
+    important aspect of all kind of information: it provides a
+    "handle" on the world to work with.
 *)
 
 open Sexplib
