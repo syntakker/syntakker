@@ -10,3 +10,4 @@
 *.native
 *~
 _build
+*.docdir
