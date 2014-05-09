@@ -7,7 +7,6 @@ type bindung = atom * atom * atom
 type blubber = int String.Map.t
 type blubber2 = string Int.Map.t
 
-
 type plan = {
   sequence: int ref;
 
@@ -80,16 +79,16 @@ let stringmap_ref_add = fun zeichen value map_ref ->
 let map_map_ref_add = fun atom1 atom2 value map_ref ->
   let map = !map_ref in
   let secondary_map =
-    match Map.find map atom1 with
-	None -> Int.Map.empty
+    match Map.find map atom1
+    with None -> Int.Map.empty
       | Some map -> map
   in
   map_ref := Map.add map ~key:atom1 ~data:(Map.add secondary_map ~key:atom2 ~data:value)
 
 let map_map_ref_find = fun atom1 atom2 map_ref ->
   let map = !map_ref in
-  match Map.find map atom1 with
-      None -> None
+  match Map.find map atom1
+  with None -> None
     | Some map -> Map.find map atom2
 
 
@@ -101,10 +100,10 @@ let add_zeichen = fun zeichen plan ->
     match Map.find zeichen_map zeichen
     with Some atom -> atom
       | None ->
-      let next = next_atom plan in
-      let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
-      let _ = map_ref_add next zeichen plan.atom_zeichen in
-      next
+        let next = next_atom plan in
+        let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
+        let _ = map_ref_add next zeichen plan.atom_zeichen in
+        next
 
 let find_zeichen = fun atom plan ->
   Map.find !(plan.atom_zeichen) atom
@@ -116,24 +115,25 @@ let add_new_bindung = fun bindung plan ->
   else
     let func = func_of_bindung bindung in
     let arg = arg_of_bindung bindung in
-    match (map_map_ref_find func arg plan.func_arg_app) with
-        Some app -> app
+    match (map_map_ref_find func arg plan.func_arg_app)
+    with Some app -> app
       | None -> let app = next_atom plan in 
                 let bindung = (app, func, arg) in
                 let _ = map_map_ref_add func arg app (plan.func_arg_app) in
                 let _ = map_map_ref_add arg func app (plan.arg_func_app) in
                 let _ = map_ref_add app bindung (plan.app_bindung) in
                 app
-       
+  
 let find_bindung = fun func arg plan ->
-  match map_map_ref_find func arg (plan.func_arg_app) with
-      None -> None
+  match map_map_ref_find func arg (plan.func_arg_app)
+  with None -> None
     | Some app -> Map.find !(plan.app_bindung) app
 
 
 let rec add_sexp = fun sexp plan ->
-  match sexp with
-      Sexp.Atom zeichen -> add_zeichen (zeichen_of_string zeichen) plan
+  match sexp
+  with Sexp.Atom "_" -> (atom_of_int 0)
+    | Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
     | Sexp.List [func] -> add_sexp func plan
     | Sexp.List [func; arg] -> 
       let func = add_sexp func plan in
@@ -143,19 +143,18 @@ let rec add_sexp = fun sexp plan ->
     | Sexp.List [] -> atom_of_int 0
 
 let rec read_sexp = fun atom plan ->
-  match Map.find !(plan.atom_zeichen) atom with
-      Some zeichen -> Sexp.Atom (string_of_zeichen zeichen)
-    | None -> match Map.find !(plan.app_bindung) atom with
-        None -> Sexp.List [Sexp.Atom "$$node";Sexp.Atom (string_of_int (int_of_atom atom))]
+  match Map.find !(plan.atom_zeichen) atom
+  with Some zeichen -> Sexp.Atom (string_of_zeichen zeichen)
+    | None -> match Map.find !(plan.app_bindung) atom
+      with None -> Sexp.List [Sexp.Atom "$$node";Sexp.Atom (string_of_int (int_of_atom atom))]
         | Some bindung ->
           let func = func_of_bindung bindung in
           let arg = arg_of_bindung bindung in
           Sexp.List [read_sexp func plan ;read_sexp arg plan]
-    
+   
 
 let of_string = fun sexp_string plan ->
   add_sexp (Sexp.of_string sexp_string) plan
 
 let to_string = fun atom plan ->
   Sexp.to_string (read_sexp atom plan)     
-
