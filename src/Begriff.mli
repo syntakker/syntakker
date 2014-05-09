@@ -6,6 +6,8 @@ type bindung
 
 type plan
 
+exception Reserved_word of string
+
 val empty_plan: unit -> plan
 
 val zeichen_of_string: string -> zeichen
@@ -30,3 +32,5 @@ val find_bindung: atom -> atom -> plan -> bindung option
 
 val add_sexp: Sexp.t -> plan -> atom
 val read_sexp: atom -> plan -> Sexp.t
+
+val is_reserved_word: string -> bool

@@ -54,7 +54,7 @@ Test.add_simple_test ~title:"write and read a bindung" (fun () ->
 )
 ;;
 
-Test.add_simple_test ~title:"write and read sexp" (fun () ->
+Test.add_simple_test ~title:"write and read s-expression" (fun () ->
   let plan = Begriff.empty_plan () in
   let added_sexp1 = Begriff.add_sexp (Sexp.of_string "((all cops) are bastards)") plan in
   Assert.equal 7 ~msg:"wrong number of nodes" (Begriff.int_of_atom (Begriff.last_atom plan));
@@ -72,7 +72,26 @@ Test.add_simple_test ~title:"write and read sexp" (fun () ->
 )
 ;;
 
+Test.add_simple_test ~title:"abstract nodes as s-expression" (fun () ->
+  let plan = Begriff.empty_plan () in
+  let func = Begriff.next_atom plan in
+  let arg = Begriff.next_atom plan in
+  let app = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
+  let read_sexp = Begriff.read_sexp (Begriff.atom_of_int 3) plan in
+  Assert.equal ~msg:"expression not correctly rendered" "(($$node 1)($$node 2))" (Sexp.to_string read_sexp);
+)
+;;
 
+Test.add_simple_test ~title:"no reserved words can be inserted" (fun () ->
+  Assert.make_raises
+    (function Begriff.Reserved_word _ -> true | _ -> false)
+    Printexc.to_string
+    ~msg:"Exception Reserved_word should be raised on insertion of '$$node'"
+    (fun () ->
+      let plan = Begriff.empty_plan () in
+      Begriff.add_sexp (Sexp.of_string "($$node 1)") plan)
+)
+;;
 
 launch_tests ()
 ;;

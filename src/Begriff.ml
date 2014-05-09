@@ -22,6 +22,14 @@ type plan = {
   app_bindung: bindung IntMap.t ref
 }
 
+exception Reserved_word of string
+
+let keyword_node = "$$node"
+
+let reserved_words = [keyword_node]
+
+let is_reserved_word = fun word -> List.mem word reserved_words
+
 let empty_plan = fun () ->
   {
     sequence = ref 0;
@@ -92,15 +100,18 @@ let map_map_ref_find = fun atom1 atom2 map_ref ->
 
 
 let add_zeichen = fun zeichen plan ->
-  let zeichen_map =  !(plan.zeichen_atom) in 
-  if StringMap.mem zeichen zeichen_map
-  then
-    StringMap.find zeichen zeichen_map
+  if is_reserved_word zeichen
+  then raise (Reserved_word zeichen)
   else
-    let next = next_atom plan in
-    let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
-    let _ = map_ref_add next zeichen plan.atom_zeichen in
-    next
+    let zeichen_map =  !(plan.zeichen_atom) in 
+    if StringMap.mem zeichen zeichen_map
+    then
+      StringMap.find zeichen zeichen_map
+    else
+      let next = next_atom plan in
+      let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
+      let _ = map_ref_add next zeichen plan.atom_zeichen in
+      next
 
 let find_zeichen = fun atom plan ->
   map_find atom !(plan.atom_zeichen)
