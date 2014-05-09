@@ -1,5 +1,0 @@
-PRJ syntakker
-S src/.
-B _build/src
-PKG kaputt
-PKG core

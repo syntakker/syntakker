@@ -5,3 +5,4 @@ true: use_nums
 true: thread
 
 "src": include
+"test": include
