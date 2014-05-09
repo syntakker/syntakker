@@ -15,9 +15,9 @@
     formal system at the border between language and formal
     mathematics, developed by Gottlob Frege). It roughly means "word",
     but the subtle associations do also refer to something which
-    translates roughly to "handle" in English. This describes an
-    important aspect of all kind of information: it provides a
-    "handle" on the world to work with.
+    translates to "handle" in English. This describes an important
+    aspect of all kind of information: it provides a "handle" on the
+    world to work with.
 *)
 
 open Sexplib
