@@ -1,25 +1,22 @@
-open Sexplib
-
-module IntMap = Map.Make(struct type t = int let compare = compare end)
-module StringMap = Map.Make(struct type t = string let compare = compare end)
+open Core.Std
 
 type zeichen = string
 type atom = int
 type bindung = atom * atom * atom
 
-type blubber = int StringMap.t
-type blubber2 = string IntMap.t
+type blubber = int String.Map.t
+type blubber2 = string Int.Map.t
 
 
 type plan = {
   sequence: int ref;
 
-  zeichen_atom: int StringMap.t ref;
-  atom_zeichen: string IntMap.t ref;
+  zeichen_atom: int String.Map.t ref;
+  atom_zeichen: string Int.Map.t ref;
 
-  func_arg_app: ((int IntMap.t) IntMap.t) ref;
-  arg_func_app: ((int IntMap.t) IntMap.t) ref;
-  app_bindung: bindung IntMap.t ref
+  func_arg_app: ((int Int.Map.t) Int.Map.t) ref;
+  arg_func_app: ((int Int.Map.t) Int.Map.t) ref;
+  app_bindung: bindung Int.Map.t ref
 }
 
 exception Reserved_word of string
@@ -28,18 +25,18 @@ let keyword_node = "$$node"
 
 let reserved_words = [keyword_node]
 
-let is_reserved_word = fun word -> List.mem word reserved_words
+let is_reserved_word = fun word -> List.mem reserved_words word 
 
 let empty_plan = fun () ->
   {
     sequence = ref 0;
 
-    zeichen_atom = ref StringMap.empty;
-    atom_zeichen = ref IntMap.empty;
+    zeichen_atom = ref String.Map.empty;
+    atom_zeichen = ref Int.Map.empty;
 
-    func_arg_app = ref IntMap.empty;
-    arg_func_app = ref IntMap.empty;
-    app_bindung = ref IntMap.empty;
+    func_arg_app = ref Int.Map.empty;
+    arg_func_app = ref Int.Map.empty;
+    app_bindung = ref Int.Map.empty;
   }
 
 
@@ -71,52 +68,46 @@ let last_atom = fun plan -> !(plan.sequence)
 
 let plan_size = last_atom
 
-let map_find = fun atom map ->
-  if IntMap.mem atom map
-  then Some (IntMap.find atom map)
-  else None
-
 let map_ref_add = fun atom value map_ref ->
   let map = !map_ref in
-  map_ref := IntMap.add atom value map
+  map_ref := Map.add map ~key:atom ~data:value
 
 let stringmap_ref_add = fun zeichen value map_ref ->
   let map = !map_ref in
-  map_ref := StringMap.add zeichen value map
+  map_ref := Map.add map ~key:zeichen ~data:value
 
 
 let map_map_ref_add = fun atom1 atom2 value map_ref ->
   let map = !map_ref in
   let secondary_map =
-    if IntMap.mem atom1 map
-    then IntMap.find atom1 map
-    else IntMap.empty
+    match Map.find map atom1 with
+	None -> Int.Map.empty
+      | Some map -> map
   in
-  map_ref := IntMap.add atom1 (IntMap.add atom2 value secondary_map) map
+  map_ref := Map.add map ~key:atom1 ~data:(Map.add secondary_map ~key:atom2 ~data:value)
 
 let map_map_ref_find = fun atom1 atom2 map_ref ->
   let map = !map_ref in
-  if IntMap.mem atom1 map
-  then map_find atom2 (IntMap.find atom1 map)
-  else None
+  match Map.find map atom1 with
+      None -> None
+    | Some map -> Map.find map atom2
 
 
 let add_zeichen = fun zeichen plan ->
   if is_reserved_word zeichen
   then raise (Reserved_word zeichen)
   else
-    let zeichen_map =  !(plan.zeichen_atom) in 
-    if StringMap.mem zeichen zeichen_map
-    then
-      StringMap.find zeichen zeichen_map
-    else
+    let zeichen_map =  !(plan.zeichen_atom) in
+    match Map.find zeichen_map zeichen
+    with Some atom -> atom
+      | None ->
       let next = next_atom plan in
       let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
       let _ = map_ref_add next zeichen plan.atom_zeichen in
       next
 
 let find_zeichen = fun atom plan ->
-  map_find atom !(plan.atom_zeichen)
+  Map.find !(plan.atom_zeichen) atom
 
 
 let add_new_bindung = fun bindung plan ->
@@ -133,11 +124,11 @@ let add_new_bindung = fun bindung plan ->
                 let _ = map_map_ref_add arg func app (plan.arg_func_app) in
                 let _ = map_ref_add app bindung (plan.app_bindung) in
                 app
-        
+       
 let find_bindung = fun func arg plan ->
   match map_map_ref_find func arg (plan.func_arg_app) with
       None -> None
-    | Some app -> map_find app !(plan.app_bindung)
+    | Some app -> Map.find !(plan.app_bindung) app
 
 
 let rec add_sexp = fun sexp plan ->
@@ -152,9 +143,9 @@ let rec add_sexp = fun sexp plan ->
     | Sexp.List [] -> atom_of_int 0
 
 let rec read_sexp = fun atom plan ->
-  match map_find atom !(plan.atom_zeichen) with
+  match Map.find !(plan.atom_zeichen) atom with
       Some zeichen -> Sexp.Atom (string_of_zeichen zeichen)
-    | None -> match map_find atom !(plan.app_bindung) with
+    | None -> match Map.find !(plan.app_bindung) atom with
         None -> Sexp.List [Sexp.Atom "$$node";Sexp.Atom (string_of_int (int_of_atom atom))]
         | Some bindung ->
           let func = func_of_bindung bindung in
@@ -167,3 +158,4 @@ let of_string = fun sexp_string plan ->
 
 let to_string = fun atom plan ->
   Sexp.to_string (read_sexp atom plan)     
+

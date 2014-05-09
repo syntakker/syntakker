@@ -1,6 +1,7 @@
-<*Test.*>: package(kaputt), package(sexplib)
+<*Test.*>: package(kaputt), package(core)
 true: bin_annot
 true: use_str
 true: use_nums
+true: thread
 
 "src": include
