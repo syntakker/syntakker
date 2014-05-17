@@ -18,7 +18,9 @@ type plan = {
   app_bindung: bindung Int.Map.t ref
 }
 
+
 exception Reserved_word of string
+
 
 let keyword_node = "$$node"
 
@@ -140,15 +142,15 @@ let find_bindung_func_arg = fun func arg plan ->
     | Some app -> find_bindung_app app plan
 
 
-let rec of_sexp = fun sexp plan ->
+let rec of_sexp = fun ?(create=true) sexp plan ->
   match sexp
   with Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
-    | Sexp.List [func] -> of_sexp func plan
+    | Sexp.List [func] -> of_sexp ~create:create func plan
     | Sexp.List [func; arg] -> 
-      let func = of_sexp func plan in
-      let arg = of_sexp arg plan in
+      let func = of_sexp ~create:create func plan in
+      let arg = of_sexp ~create:create arg plan in
       add_bindung func arg plan
-    | Sexp.List (func::arg::args) -> of_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
+    | Sexp.List (func::arg::args) -> of_sexp ~create:create (Sexp.List ((Sexp.List [func; arg])::args)) plan
     | Sexp.List [] -> atom_of_int 0
 
 let rec to_sexp = fun atom plan ->
@@ -162,8 +164,8 @@ let rec to_sexp = fun atom plan ->
           Sexp.List [to_sexp func plan ;to_sexp arg plan]
 	    
 
-let of_string = fun sexp_string plan ->
-  of_sexp (Sexp.of_string sexp_string) plan
+let of_string = fun ?(create=true) sexp_string plan ->
+  of_sexp ~create:create (Sexp.of_string sexp_string) plan
 
 let to_string = fun atom plan ->
   Sexp.to_string (to_sexp atom plan)     
