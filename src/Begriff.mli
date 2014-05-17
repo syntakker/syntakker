@@ -20,6 +20,7 @@
     world to work with.
 *)
 
+open Core.Std
 open Sexplib
 
 type zeichen
@@ -76,6 +77,8 @@ val union_atoms: atomSet -> atomSet -> atomSet
 
 val atoms_size: atomSet -> int
 (** cardinality of a [atomSet] *)
+
+val atomset_to_set: atomSet -> plan -> Int.Set.t
 
 
 val is_reserved_word: string -> bool

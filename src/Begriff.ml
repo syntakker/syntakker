@@ -51,11 +51,15 @@ let union_atoms = fun atoms1 atoms2 ->
     | _, AllNodes -> AllNodes
     | (Atoms set1), (Atoms set2) -> Atoms (Int.Set.union set1 set2)
 
-
 let atoms_size = fun atoms ->
   match atoms
   with AllNodes -> -1
     | Atoms set -> Set.length set
+
+let atomset_to_set = fun set plan ->
+  match set 
+  with AllNodes -> Int.Set.union (Int.Set.of_list (Map.keys !(plan.atom_zeichen))) (Int.Set.of_list (Map.keys !(plan.app_bindung)))
+    | Atoms inner_set -> inner_set
 
 
 let zeichen_of_string = fun x -> x
