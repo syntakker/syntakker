@@ -206,7 +206,6 @@ let with_arg = fun atom plan ->
 
 
 let rec find_matches = fun atom plan ->
-  print_string ("Matching "^(to_string atom plan)^"\n");
   match atom
   with 0 -> AllNodes
     | _ -> match find_zeichen atom plan

@@ -153,7 +153,6 @@ Test.add_simple_test ~title:"pattern matching" (fun () ->
     2
     (Begriff.atoms_size result2);
   print_string ((Begriff.atomset_to_string result2 plan) ^ "\n")
-
 )
 ;;
 
