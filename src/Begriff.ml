@@ -4,7 +4,7 @@ type zeichen = string
 type atom = int
 type bindung = atom * atom * atom
 type atomSet = 
-    All
+    AllNodes
   | Atoms of Int.Set.t
 
 type plan = {
@@ -36,19 +36,25 @@ let empty_plan = fun () ->
 
     func_arg_app = ref Int.Map.empty;
     arg_func_app = ref Int.Map.empty;
-    app_bindung = ref Int.Map.empty;
+    app_bindung = ref Int.Map.empty
   }
 
 let intersect_atoms = fun atoms1 atoms2 ->
   match atoms1, atoms2
-  with All, All -> All
-    | All, _ -> atoms2
-    | _, All -> atoms1
+  with AllNodes, _ -> atoms2
+    | _, AllNodes -> atoms1
     | (Atoms set1), (Atoms set2) -> Atoms (Int.Set.inter set1 set2)
+
+let union_atoms = fun atoms1 atoms2 ->
+  match atoms1, atoms2
+  with AllNodes, _ -> AllNodes
+    | _, AllNodes -> AllNodes
+    | (Atoms set1), (Atoms set2) -> Atoms (Int.Set.union set1 set2)
+
 
 let atoms_size = fun atoms ->
   match atoms
-  with All -> -1
+  with AllNodes -> -1
     | Atoms set -> Set.length set
 
 
@@ -189,3 +195,37 @@ let with_arg = fun atom plan ->
     | None -> Atoms (Int.Set.empty)
 
 
+let rec find_matches = fun atom plan ->
+  match atom
+  with 0 -> AllNodes
+    | _ -> match find_zeichen atom plan
+      with Some _ -> Atoms (Int.Set.singleton atom)
+        | None -> match find_bindung_app atom plan
+          with Some (_, func, arg) -> 
+            let matches_func = find_matches func plan in
+            let candidates_func =
+              match matches_func
+              with AllNodes -> Atoms (Int.Set.of_list (Map.keys !(plan.app_bindung)))
+                | Atoms set -> Atoms (Set.fold set
+                                        ~init:(Int.Set.empty)
+                                        ~f:(fun accu elem -> match with_func elem plan
+                                          with Atoms set -> Int.Set.union accu set
+                                            | AllNodes -> accu))
+            in
+            let matches_arg = find_matches func plan in
+            let candidates_arg =
+              match matches_arg
+              with AllNodes -> Atoms (Int.Set.of_list (Map.keys !(plan.app_bindung)))
+                | Atoms set -> Atoms (Set.fold set
+                                        ~init:(Int.Set.empty)
+                                        ~f:(fun accu elem -> match with_arg elem plan
+                                          with Atoms set -> Int.Set.union accu set
+                                            | AllNodes -> accu))
+            in
+            let candidates = intersect_atoms candidates_func candidates_arg in
+            (match candidates
+             with Atoms set -> if Int.Set.is_empty set
+	       then  raise Not_found
+	       else candidates
+               | _ -> candidates)
+            | None -> raise Not_found

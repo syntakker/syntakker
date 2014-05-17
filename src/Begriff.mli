@@ -71,6 +71,9 @@ exception Reserved_word of string
 val intersect_atoms: atomSet -> atomSet -> atomSet
 (** intersection of two Sets of atoms *)
 
+val union_atoms: atomSet -> atomSet -> atomSet
+(** union of two Sets of atoms *)
+
 val atoms_size: atomSet -> int
 (** cardinality of a [atomSet] *)
 
@@ -161,3 +164,7 @@ val with_func: atom -> plan -> atomSet
 val with_func: atom -> plan -> atomSet
 (** [with_arg arg plan] returns the list of all nodes with argument
     [arg] *)
+
+
+val find_matches: atom -> plan -> atomSet
+(** find entries matching a pattern *)
