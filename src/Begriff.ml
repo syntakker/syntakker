@@ -18,7 +18,6 @@ type plan = {
   app_bindung: bindung Int.Map.t ref
 }
 
-
 exception Reserved_word of string
 
 
@@ -123,16 +122,6 @@ let find_zeichen = fun atom plan ->
   Map.find !(plan.atom_zeichen) atom
 
 
-let add_bindung = fun func arg plan ->
-  match (map_map_ref_find func arg plan.func_arg_app)
-  with Some app -> app
-    | None -> let app = next_atom plan in 
-              let bindung = (app, func, arg) in
-              let _ = map_map_ref_add func arg app (plan.func_arg_app) in
-              let _ = map_map_ref_add arg func app (plan.arg_func_app) in
-              let _ = map_ref_add app bindung (plan.app_bindung) in
-              app
-
 let find_bindung_app = fun app plan ->
   Map.find !(plan.app_bindung) app
     
@@ -140,6 +129,16 @@ let find_bindung_func_arg = fun func arg plan ->
   match map_map_ref_find func arg (plan.func_arg_app)
   with None -> None
     | Some app -> find_bindung_app app plan
+
+let add_bindung = fun func arg plan ->
+  match find_bindung_func_arg func arg plan
+  with Some bindung -> app_of_bindung bindung
+    | None -> let app = next_atom plan in 
+              let bindung = (app, func, arg) in
+              let _ = map_map_ref_add func arg app (plan.func_arg_app) in
+              let _ = map_map_ref_add arg func app (plan.arg_func_app) in
+              let _ = map_ref_add app bindung (plan.app_bindung) in
+              app
 
 
 let rec of_sexp = fun ?(create=true) sexp plan ->
