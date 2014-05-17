@@ -121,7 +121,7 @@ val plan_size: plan -> int
 (** returns the number of nodes in a [plan] *)
 
 
-val add_zeichen: zeichen -> plan -> atom
+val add_zeichen: ?create:bool -> zeichen -> plan -> atom
 (** returns the node labeled by a [zeichen] if one exists, and
     introduces a new node if there is none *)
 
@@ -129,7 +129,7 @@ val find_zeichen: atom -> plan -> zeichen option
 (** returns the label of a node if it has one *)
 
 
-val add_bindung: atom -> atom -> plan -> atom
+val add_bindung: ?create:bool -> atom -> atom -> plan -> atom
 (** [add_bindung func arg plan] adds a new [bindung] with function
     [func] and argument [arg] in [plan], if it does not exist yet. *)
 

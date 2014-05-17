@@ -105,7 +105,7 @@ let map_map_ref_find = fun atom1 atom2 map_ref ->
     | Some map -> Map.find map atom2
 
 
-let add_zeichen = fun zeichen plan ->
+let add_zeichen = fun ?(create=true) zeichen plan ->
   if is_reserved_word zeichen
   then raise (Reserved_word zeichen)
   else
@@ -113,10 +113,14 @@ let add_zeichen = fun zeichen plan ->
     match Map.find zeichen_map zeichen
     with Some atom -> atom
       | None ->
-        let next = next_atom plan in
-        let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
-        let _ = map_ref_add next zeichen plan.atom_zeichen in
-        next
+	if create
+	then
+          let next = next_atom plan in
+          let _ = stringmap_ref_add zeichen next plan.zeichen_atom in
+          let _ = map_ref_add next zeichen plan.atom_zeichen in
+          next
+	else
+	  raise Not_found
 
 let find_zeichen = fun atom plan ->
   Map.find !(plan.atom_zeichen) atom
@@ -130,25 +134,29 @@ let find_bindung_func_arg = fun func arg plan ->
   with None -> None
     | Some app -> find_bindung_app app plan
 
-let add_bindung = fun func arg plan ->
+let add_bindung = fun ?(create=true) func arg plan ->
   match find_bindung_func_arg func arg plan
   with Some bindung -> app_of_bindung bindung
-    | None -> let app = next_atom plan in 
-              let bindung = (app, func, arg) in
-              let _ = map_map_ref_add func arg app (plan.func_arg_app) in
-              let _ = map_map_ref_add arg func app (plan.arg_func_app) in
-              let _ = map_ref_add app bindung (plan.app_bindung) in
-              app
+    | None -> if create
+      then
+	let app = next_atom plan in 
+        let bindung = (app, func, arg) in
+        let _ = map_map_ref_add func arg app (plan.func_arg_app) in
+        let _ = map_map_ref_add arg func app (plan.arg_func_app) in
+        let _ = map_ref_add app bindung (plan.app_bindung) in
+        app
+      else
+	raise Not_found
 
 
 let rec of_sexp = fun ?(create=true) sexp plan ->
   match sexp
-  with Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
+  with Sexp.Atom zeichen  -> add_zeichen ~create:create (zeichen_of_string zeichen) plan
     | Sexp.List [func] -> of_sexp ~create:create func plan
     | Sexp.List [func; arg] -> 
       let func = of_sexp ~create:create func plan in
       let arg = of_sexp ~create:create arg plan in
-      add_bindung func arg plan
+      add_bindung func ~create:create arg plan
     | Sexp.List (func::arg::args) -> of_sexp ~create:create (Sexp.List ((Sexp.List [func; arg])::args)) plan
     | Sexp.List [] -> atom_of_int 0
 
