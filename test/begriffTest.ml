@@ -134,5 +134,28 @@ Test.add_simple_test ~title:"\"_\" is node 0" (fun () ->
 )
 ;;
 
+
+Test.add_simple_test ~title:"pattern matching" (fun () ->
+  let plan = Begriff.empty_plan () in
+  let expr = Begriff.of_string "((acht cola) (acht bier))" plan in
+  print_string ("Node "^(string_of_int (Begriff.int_of_atom expr))^": "^(Begriff.to_string expr plan)^"\n");
+  let pattern1 = Begriff.of_string "(acht _)" plan in
+  print_string ("Node "^(string_of_int (Begriff.int_of_atom pattern1))^": "^(Begriff.to_string pattern1 plan)^"\n");
+  let result1 = Begriff.find_matches pattern1 plan in
+  Assert.equal ~msg:"Result 1 should have three entries"
+    3
+    (Begriff.atoms_size result1);
+  print_string ((Begriff.atomset_to_string result1 plan) ^ "\n");
+  let pattern2 = Begriff.of_string "((acht _) (_ bier))" plan in
+  print_string ("Node "^(string_of_int (Begriff.int_of_atom pattern2))^": "^(Begriff.to_string pattern2 plan)^"\n");
+  let result2 = Begriff.find_matches pattern2 plan in
+  Assert.equal ~msg:"Result 2 should have two entries"
+    2
+    (Begriff.atoms_size result2);
+  print_string ((Begriff.atomset_to_string result2 plan) ^ "\n")
+
+)
+;;
+
 launch_tests ()
 ;;

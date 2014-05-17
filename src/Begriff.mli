@@ -156,6 +156,9 @@ val of_string: ?create:bool -> string -> plan -> atom
 val to_string: atom -> plan -> string
 (** like [read_sexp], but the s-expression is rendered to a [string] *)
 
+val atomset_to_string: atomSet -> plan -> string
+(** render a set of nodes *)
+
 
 val with_func: atom -> plan -> atomSet
 (** [with_func func plan] returns the list of all nodes with function

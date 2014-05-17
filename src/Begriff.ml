@@ -183,6 +183,16 @@ let of_string = fun ?(create=true) sexp_string plan ->
 let to_string = fun atom plan ->
   Sexp.to_string (to_sexp atom plan)     
 
+let atomset_to_string = fun atoms plan ->
+  let result =
+    match atoms
+    with AllNodes -> "everything"
+      | Atoms set -> Int.Set.fold set 
+	~init: ""
+	~f: (fun accu elem -> accu ^ ", " ^(to_string elem plan))
+  in
+  (String.sub result 2 ((String.length result) - 2)) 
+
 
 let with_func = fun atom plan ->
   match Map.find !(plan.func_arg_app) atom
@@ -196,6 +206,7 @@ let with_arg = fun atom plan ->
 
 
 let rec find_matches = fun atom plan ->
+  print_string ("Matching "^(to_string atom plan)^"\n");
   match atom
   with 0 -> AllNodes
     | _ -> match find_zeichen atom plan
@@ -212,7 +223,7 @@ let rec find_matches = fun atom plan ->
                                           with Atoms set -> Int.Set.union accu set
                                             | AllNodes -> accu))
             in
-            let matches_arg = find_matches func plan in
+            let matches_arg = find_matches arg plan in
             let candidates_arg =
               match matches_arg
               with AllNodes -> Atoms (Int.Set.of_list (Map.keys !(plan.app_bindung)))
