@@ -56,19 +56,19 @@ Test.add_simple_test ~title:"write and read a bindung" (fun () ->
 
 Test.add_simple_test ~title:"write and read s-expression" (fun () ->
   let plan = Begriff.empty_plan () in
-  let added_sexp1 = Begriff.add_sexp (Sexp.of_string "((all cops) are bastards)") plan in
+  let added_sexp1 = Begriff.of_sexp (Sexp.of_string "((all cops) are bastards)") plan in
   Assert.equal 7 ~msg:"wrong number of nodes" (Begriff.int_of_atom (Begriff.last_atom plan));
   Assert.equal 7 ~msg:"wrong node for expression" (Begriff.int_of_atom added_sexp1);
-  let added_sexp2 = Begriff.add_sexp (Sexp.of_string "((all cops) are bastards)") plan in
+  let added_sexp2 = Begriff.of_sexp (Sexp.of_string "((all cops) are bastards)") plan in
   Assert.equal 7 ~msg:"no new node should have been created here" (Begriff.int_of_atom (Begriff.last_atom plan));
   Assert.equal 7 ~msg:"same expression should result in same node" (Begriff.int_of_atom added_sexp2);
-  let added_sexp3 = Begriff.add_sexp (Sexp.of_string "(all cops)") plan in
+  let added_sexp3 = Begriff.of_sexp (Sexp.of_string "(all cops)") plan in
   Assert.equal 7 ~msg:"no new node should have been created for existent sub-expression" (Begriff.int_of_atom (Begriff.last_atom plan));
   Assert.equal 3 ~msg:"wrong node number, nodes should be numbered in strict left-to-right-order" (Begriff.int_of_atom added_sexp3);
-  let read_sexp1 = Begriff.read_sexp (Begriff.atom_of_int 7) plan in
-  Assert.equal ~msg:"expression not correctly rendered" "(((all cops)are)bastards)" (Sexp.to_string read_sexp1);
-  let read_sexp2 = Begriff.read_sexp (Begriff.atom_of_int 5) plan in
-  Assert.equal ~msg:"sub-expression not correctly rendered" "((all cops)are)" (Sexp.to_string read_sexp2)
+  let to_sexp1 = Begriff.to_sexp (Begriff.atom_of_int 7) plan in
+  Assert.equal ~msg:"expression not correctly rendered" "(((all cops)are)bastards)" (Sexp.to_string to_sexp1);
+  let to_sexp2 = Begriff.to_sexp (Begriff.atom_of_int 5) plan in
+  Assert.equal ~msg:"sub-expression not correctly rendered" "((all cops)are)" (Sexp.to_string to_sexp2)
 )
 ;;
 
@@ -77,8 +77,8 @@ Test.add_simple_test ~title:"abstract nodes as s-expression" (fun () ->
   let func = Begriff.next_atom plan in
   let arg = Begriff.next_atom plan in
   let _ = Begriff.add_bindung func arg plan in
-  let read_sexp = Begriff.read_sexp (Begriff.atom_of_int 3) plan in
-  Assert.equal ~msg:"expression not correctly rendered" "(($$node 1)($$node 2))" (Sexp.to_string read_sexp);
+  let to_sexp = Begriff.to_sexp (Begriff.atom_of_int 3) plan in
+  Assert.equal ~msg:"expression not correctly rendered" "(($$node 1)($$node 2))" (Sexp.to_string to_sexp);
 )
 ;;
 
@@ -89,7 +89,7 @@ Test.add_simple_test ~title:"no reserved words can be inserted" (fun () ->
     ~msg:"Exception Reserved_word should be raised on insertion of '$$node'"
     (fun () ->
       let plan = Begriff.empty_plan () in
-      Begriff.add_sexp (Sexp.of_string "($$node 1)") plan)
+      Begriff.of_sexp (Sexp.of_string "($$node 1)") plan)
 )
 ;;
 

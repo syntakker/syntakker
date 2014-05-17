@@ -140,18 +140,18 @@ let find_bindung_func_arg = fun func arg plan ->
     | Some app -> find_bindung_app app plan
 
 
-let rec add_sexp = fun sexp plan ->
+let rec of_sexp = fun sexp plan ->
   match sexp
   with Sexp.Atom zeichen  -> add_zeichen (zeichen_of_string zeichen) plan
-    | Sexp.List [func] -> add_sexp func plan
+    | Sexp.List [func] -> of_sexp func plan
     | Sexp.List [func; arg] -> 
-      let func = add_sexp func plan in
-      let arg = add_sexp arg plan in
+      let func = of_sexp func plan in
+      let arg = of_sexp arg plan in
       add_bindung func arg plan
-    | Sexp.List (func::arg::args) -> add_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
+    | Sexp.List (func::arg::args) -> of_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
     | Sexp.List [] -> atom_of_int 0
 
-let rec read_sexp = fun atom plan ->
+let rec to_sexp = fun atom plan ->
   match Map.find !(plan.atom_zeichen) atom
   with Some zeichen -> Sexp.Atom (string_of_zeichen zeichen)
     | None -> match Map.find !(plan.app_bindung) atom
@@ -159,14 +159,14 @@ let rec read_sexp = fun atom plan ->
         | Some bindung ->
           let func = func_of_bindung bindung in
           let arg = arg_of_bindung bindung in
-          Sexp.List [read_sexp func plan ;read_sexp arg plan]
+          Sexp.List [to_sexp func plan ;to_sexp arg plan]
 	    
 
 let of_string = fun sexp_string plan ->
-  add_sexp (Sexp.of_string sexp_string) plan
+  of_sexp (Sexp.of_string sexp_string) plan
 
 let to_string = fun atom plan ->
-  Sexp.to_string (read_sexp atom plan)     
+  Sexp.to_string (to_sexp atom plan)     
 
 
 let with_func = fun atom plan ->

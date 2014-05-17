@@ -139,10 +139,10 @@ val find_bindung_app: atom -> plan -> bindung option
 val find_bindung_func_arg: atom -> atom -> plan -> bindung option
 (** returns the [bindung] with function [func] and argument [arg], if there is one. *)
 
-val add_sexp: Sexp.t -> plan -> atom
+val of_sexp: Sexp.t -> plan -> atom
 (** Adds an s-expression to a plan *)
  
-val read_sexp: atom -> plan -> Sexp.t
+val to_sexp: atom -> plan -> Sexp.t
 (** returns the expression an [atom] refers to as s-expression *)
 
 
