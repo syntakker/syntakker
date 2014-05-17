@@ -60,11 +60,16 @@ type plan
     may have labels of type [zeichen].
 *)
 
+type atomSet
+(** A set of [atom] elements *)
 
 exception Reserved_word of string
 (** [Reserved_word] is raised if trying to label a node by a keyword
     of module [Begriff] (currently only [$$node]):
 *)
+
+val intersect_atoms: atomSet -> atomSet -> atomSet
+(** intersection of two Sets of atoms *)
 
 val is_reserved_word: string -> bool
 (** tests if a [string] is a keyword of module [Begriff] *)
@@ -145,3 +150,12 @@ val of_string: string -> plan -> atom
 
 val to_string: atom -> plan -> string
 (** like [read_sexp], but the s-expression is rendered to a [string] *)
+
+
+val with_func: atom -> plan -> atomSet
+(** [with_func func plan] returns the list of all nodes with function
+    [func] *)
+
+val with_func: atom -> plan -> atomSet
+(** [with_arg arg plan] returns the list of all nodes with argument
+    [arg] *)

@@ -114,7 +114,7 @@ Test.add_simple_test ~title:"Read s-expression" (fun () ->
 )
 ;;
 
-Test.add_simple_test ~title:"Read s-expression" (fun () ->
+Test.add_simple_test ~title:"\"_\" is node 0" (fun () ->
   let plan = Begriff.empty_plan () in
   let _ = Begriff.of_string "((acht _ cola) ( _  acht bier))" plan in
   (match Begriff.find_bindung_app (Begriff.atom_of_int 2) plan
@@ -126,9 +126,11 @@ Test.add_simple_test ~title:"Read s-expression" (fun () ->
   match Begriff.find_bindung_app (Begriff.atom_of_int 5) plan
   with None -> Assert.fail_msg "bindung not found"
     | Some bindung ->
+      let underscore = (Begriff.func_of_bindung bindung) in
       Assert.equal ~msg:"Function of node 5 should be '_'"
         0
-        (Begriff.int_of_atom (Begriff.func_of_bindung bindung));
+        (Begriff.int_of_atom underscore);
+      Assert.equal "_" (Begriff.to_string underscore plan) 
 )
 ;;
 

@@ -3,9 +3,9 @@ open Core.Std
 type zeichen = string
 type atom = int
 type bindung = atom * atom * atom
-
-type blubber = int String.Map.t
-type blubber2 = string Int.Map.t
+type atomSet = 
+    All
+  | Atoms of Int.Set.t
 
 type plan = {
   sequence: int ref;
@@ -38,6 +38,12 @@ let empty_plan = fun () ->
     app_bindung = ref Int.Map.empty;
   }
 
+let intersect_atoms = fun atoms1 atoms2 ->
+  match atoms1, atoms2 with
+      All, All -> All
+    | All, _ -> atoms2
+    | _, All -> atoms1
+    | (Atoms set1), (Atoms set2) -> Atoms (Int.Set.inter set1 set2)
 
 let zeichen_of_string = fun x -> x
 
@@ -126,7 +132,7 @@ let add_new_bindung = fun bindung plan ->
 
 let find_bindung_app = fun app plan ->
   Map.find !(plan.app_bindung) app
-  
+    
 let find_bindung_func_arg = fun func arg plan ->
   match map_map_ref_find func arg (plan.func_arg_app)
   with None -> None
@@ -153,10 +159,23 @@ let rec read_sexp = fun atom plan ->
           let func = func_of_bindung bindung in
           let arg = arg_of_bindung bindung in
           Sexp.List [read_sexp func plan ;read_sexp arg plan]
-   
+	    
 
 let of_string = fun sexp_string plan ->
   add_sexp (Sexp.of_string sexp_string) plan
 
 let to_string = fun atom plan ->
   Sexp.to_string (read_sexp atom plan)     
+
+
+let with_func = fun atom plan ->
+  match Map.find !(plan.func_arg_app) atom
+  with Some map -> Atoms (Int.Set.of_list (Map.data map))
+    | None -> Atoms (Int.Set.empty)
+
+let with_arg = fun atom plan ->
+  match Map.find !(plan.arg_func_app) atom
+  with Some map -> Atoms (Int.Set.of_list (Map.data map))
+    | None -> Atoms (Int.Set.empty)
+
+
