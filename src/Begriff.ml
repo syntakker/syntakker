@@ -39,11 +39,17 @@ let empty_plan = fun () ->
   }
 
 let intersect_atoms = fun atoms1 atoms2 ->
-  match atoms1, atoms2 with
-      All, All -> All
+  match atoms1, atoms2
+  with All, All -> All
     | All, _ -> atoms2
     | _, All -> atoms1
     | (Atoms set1), (Atoms set2) -> Atoms (Int.Set.inter set1 set2)
+
+let atoms_size = fun atoms ->
+  match atoms
+  with All -> -1
+    | Atoms set -> Set.length set
+
 
 let zeichen_of_string = fun x -> x
 

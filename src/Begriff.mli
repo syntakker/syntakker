@@ -71,6 +71,10 @@ exception Reserved_word of string
 val intersect_atoms: atomSet -> atomSet -> atomSet
 (** intersection of two Sets of atoms *)
 
+val atoms_size: atomSet -> int
+(** cardinality of a [atomSet] *)
+
+
 val is_reserved_word: string -> bool
 (** tests if a [string] is a keyword of module [Begriff] *)
 
