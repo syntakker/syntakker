@@ -184,14 +184,17 @@ let to_string = fun atom plan ->
   Sexp.to_string (to_sexp atom plan)     
 
 let atomset_to_string = fun atoms plan ->
-  let result =
-    match atoms
-    with AllNodes -> "everything"
-      | Atoms set -> Int.Set.fold set 
-	~init: ""
-	~f: (fun accu elem -> accu ^ ", " ^(to_string elem plan))
-  in
-  (String.sub result 2 ((String.length result) - 2)) 
+  match atoms
+  with AllNodes -> "everything"
+    | Atoms set -> if Int.Set.is_empty set 
+      then "{}"
+      else
+	let result =
+	  Int.Set.fold set 
+	    ~init: ""
+	    ~f: (fun accu elem -> accu ^ ", " ^(to_string elem plan))
+	in
+	"{ "^(String.sub result 2 ((String.length result) - 2)) ^" }"
 
 
 let with_func = fun atom plan ->
