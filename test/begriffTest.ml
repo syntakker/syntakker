@@ -38,7 +38,7 @@ Test.add_simple_test ~title:"write and read a bindung" (fun () ->
   let arg = Begriff.next_atom plan in
   Assert.equal ~msg:"wrong number for atom 1" (Begriff.atom_of_int 1) func;
   Assert.equal ~msg:"wrong number for atom 2" (Begriff.atom_of_int 2) arg;
-  let app = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
+  let app = Begriff.add_bindung func arg plan in
   Assert.equal ~msg:"wrong number for bindung" (Begriff.atom_of_int 3) app;
   let found = Begriff.find_bindung_func_arg func arg plan in
   Assert.is_some ~msg:"no bindung found" found;
@@ -76,7 +76,7 @@ Test.add_simple_test ~title:"abstract nodes as s-expression" (fun () ->
   let plan = Begriff.empty_plan () in
   let func = Begriff.next_atom plan in
   let arg = Begriff.next_atom plan in
-  let _ = Begriff.add_new_bindung (Begriff.bindung_of_func_arg func arg) plan in
+  let _ = Begriff.add_bindung func arg plan in
   let read_sexp = Begriff.read_sexp (Begriff.atom_of_int 3) plan in
   Assert.equal ~msg:"expression not correctly rendered" "(($$node 1)($$node 2))" (Sexp.to_string read_sexp);
 )
@@ -133,7 +133,6 @@ Test.add_simple_test ~title:"\"_\" is node 0" (fun () ->
       Assert.equal "_" (Begriff.to_string underscore plan) 
 )
 ;;
-
 
 launch_tests ()
 ;;

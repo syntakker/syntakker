@@ -129,11 +129,9 @@ val find_zeichen: atom -> plan -> zeichen option
 (** returns the label of a node if it has one *)
 
 
-val add_new_bindung: bindung -> plan -> atom
-(** introduces a new [bindung] in a [plan].Raises [Invalid_argument]
-    if [app] is not 0 (which would imply that the bindung is not
-    new).
-*)
+val add_bindung: atom -> atom -> plan -> atom
+(** [add_bindung func arg plan] adds a new [bindung] with function
+    [func] and argument [arg] in [plan], if it does not exist yet. *)
 
 val find_bindung_app: atom -> plan -> bindung option
 (** returns the [bindung] the node [app] refers to, if there is one. *)

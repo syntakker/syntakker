@@ -121,20 +121,15 @@ let find_zeichen = fun atom plan ->
   Map.find !(plan.atom_zeichen) atom
 
 
-let add_new_bindung = fun bindung plan ->
-  if not (app_of_bindung bindung = 0)
-  then raise (Invalid_argument "app in new bindung must be 0")
-  else
-    let func = func_of_bindung bindung in
-    let arg = arg_of_bindung bindung in
-    match (map_map_ref_find func arg plan.func_arg_app)
-    with Some app -> app
-      | None -> let app = next_atom plan in 
-                let bindung = (app, func, arg) in
-                let _ = map_map_ref_add func arg app (plan.func_arg_app) in
-                let _ = map_map_ref_add arg func app (plan.arg_func_app) in
-                let _ = map_ref_add app bindung (plan.app_bindung) in
-                app
+let add_bindung = fun func arg plan ->
+  match (map_map_ref_find func arg plan.func_arg_app)
+  with Some app -> app
+    | None -> let app = next_atom plan in 
+              let bindung = (app, func, arg) in
+              let _ = map_map_ref_add func arg app (plan.func_arg_app) in
+              let _ = map_map_ref_add arg func app (plan.arg_func_app) in
+              let _ = map_ref_add app bindung (plan.app_bindung) in
+              app
 
 let find_bindung_app = fun app plan ->
   Map.find !(plan.app_bindung) app
@@ -152,7 +147,7 @@ let rec add_sexp = fun sexp plan ->
     | Sexp.List [func; arg] -> 
       let func = add_sexp func plan in
       let arg = add_sexp arg plan in
-      add_new_bindung (bindung_of_func_arg func arg) plan
+      add_bindung func arg plan
     | Sexp.List (func::arg::args) -> add_sexp (Sexp.List ((Sexp.List [func; arg])::args)) plan
     | Sexp.List [] -> atom_of_int 0
 
