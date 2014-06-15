@@ -44,16 +44,17 @@
         </style>
     </head>
     <body>
-        <script src="d3.v3.min.js"></script>
-        <script src="syntakker.js"></script>
         <div class="cockpit">
             <p>
                 New node:<br/>
-                <input type="text" id="newnode">
+                <input type="text" id="newNode">
             </p>
             <p>
-                <input type="submit" value="Create">
+                <input type="submit" id="createNode" value="Create" onclick="createNode()">
             </p>
         </div>
+
+        <script src="d3.v3.min.js"></script>
+        <script src="syntakker.js"></script>
     </body>
 </html>
