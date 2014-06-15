@@ -12,33 +12,25 @@ var force = d3.layout.force()
 .size([width, height]);
 
 d3.json("syntakker.json", function(error, json) {
-//   for (node: json.nodes)
-//   {
-//     force.nodes().push(node);
-//   }
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
 
-//   for (link: json.links)
-//   {
-//     force.links().push(link);
-//   }
+  restart();
+});
 
-  force.start();
-
-//     force
-//     .nodes(json.nodes)
-//     .links(json.links)
-//     .start();
+function restart()
+{
+  var nodes = force.nodes();
+  var links = force.links();
 
   var link = svg.selectAll(".link")
-  .data(json.links)
+  .data(links)
   .enter()
   .append("line")
   .attr("class", "link");
 
   var node = svg.selectAll(".node")
-  .data(json.nodes)
+  .data(nodes)
   .enter()
   .append("g")
   .attr("class", "node")
@@ -53,6 +45,8 @@ d3.json("syntakker.json", function(error, json) {
   .attr("dy", ".35em")
   .text(function(d) { return d.name });
 
+  force.start();
+
   force.on("tick", function() {
     link.attr("x1", function(d) { return d.source.x; })
     .attr("y1", function(d) { return d.source.y; })
@@ -61,4 +55,4 @@ d3.json("syntakker.json", function(error, json) {
 
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
   });
-});
+}
