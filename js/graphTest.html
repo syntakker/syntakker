@@ -1,6 +1,11 @@
 <html>
     <head>
         <style>
+            * {
+                color: #99ddee;
+                font-family: sans-serif;
+                font-size: 12px;
+            }
             body {
                 background-color:#000;
             }
@@ -25,10 +30,30 @@
             .node:hover circle {
                 stroke: #ffffff;
             }
+            div.cockpit {
+                position: absolute;
+                top: 150px;
+                right:10px;
+                border: #99ddee solid 1px;
+                padding:10px;
+            }
+            div.cockpit input {
+                background-color: rgba(0,0,0,0);
+                border: #aaeeff solid 1px;
+            }
         </style>
     </head>
     <body>
         <script src="d3.v3.min.js"></script>
         <script src="syntakker.js"></script>
+        <div class="cockpit">
+            <p>
+                New node:<br/>
+                <input type="text" id="newnode">
+            </p>
+            <p>
+                <input type="submit" value="Create">
+            </p>
+        </div>
     </body>
 </html>
