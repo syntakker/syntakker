@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>Syntakker - Neue Weltordnung</title>
         <style>
             * {
                 color: #99ddee;
@@ -37,22 +38,25 @@
                 width: 400px;
                 height: 100%;
                 border-left: #99ddee solid 1px;
-                padding:10px;
+                padding:50px 10px;
             }
             div.cockpit input {
                 background-color: rgba(0,0,0,0);
                 border: #aaeeff solid 1px;
+                padding:3px;
             }
         </style>
     </head>
     <body>
-        <div class="cockpit">
+        <div class="cockpit" id="cockpit">
             <p>
                 New node:<br/>
                 <input type="text" id="newNode">
             </p>
             <p>
                 <input type="submit" id="createNode" value="Create" onclick="createNode()">
+            </p>
+            <p id="nodelist">
             </p>
         </div>
 

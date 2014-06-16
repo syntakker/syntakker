@@ -1,5 +1,5 @@
 var width = 1400,
-    height = 900
+    height = 600
 
 var svg = d3.select("body").append("svg")
 .attr("width", width)
@@ -17,11 +17,7 @@ var nodes = force.nodes(),
     link = svg.selectAll(".link");
 
 d3.json("syntakker.json", function(error, json) {
-  json.nodes.map(function (node) {
-//     node.x=0;
-//     node.y=0;
-    force.nodes().push(node)
-  });
+  json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
 
   restart();
@@ -39,17 +35,15 @@ function restart()
   node = node
   .data(nodes);
 
-  node.enter()
+  var nodeEnter = node.enter()
   .append("g")
   .attr("class", "node")
   .call(force.drag);
 
-  node.append("circle")
-  .attr("class", "node")
+  nodeEnter.append("circle")
   .attr("r", 5);
 
-  node.append("text")
-  .attr("class", "node")
+  nodeEnter.append("text")
   .attr("dx", 12)
   .attr("dy", ".35em")
   .text(function(d) { return d.name });
@@ -70,6 +64,14 @@ function tick(){
 
 function createNode() {
   var newNodeName = document.getElementById("newNode").value;
-  force.nodes().push({name:newNodeName,x:0,y:0});
+  var nodeExists = false;
+  nodes.forEach(function(candidate){
+    if (candidate.name == newNodeName) nodeExists = true;
+  })
+  if (!nodeExists) force.nodes().push({name:newNodeName,x:0,y:0});
+  document.getElementById("nodelist").innerHTML = "";
+  nodes.forEach(function(node){
+    document.getElementById("nodelist").innerHTML += node.name + "<br/>";
+  })
   restart();
 }
