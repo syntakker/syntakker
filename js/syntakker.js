@@ -71,7 +71,25 @@ function createNode(newNodeName) {
   if (!nodeExists) force.nodes().push({name:newNodeName,x:0,y:0});
   document.getElementById("nodelist").innerHTML = "";
   nodes.forEach(function(node){
-    document.getElementById("nodelist").innerHTML += node.name + "<br/>";
+    document.getElementById("nodelist").innerHTML += "<a onclick=\"createLink('" + newNodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
   })
   restart();
+}
+
+function createLink(sourceName,targetName) {
+  source = findNode(sourceName);
+  target = findNode(targetName);
+  //   if (source != null) document.getElementById("nodelist").innerHTML += "source: "+ source.name + " " + JSON.stringify(source) + "<br/>";
+  //   if (target != null) document.getElementById("nodelist").innerHTML += "target: "+ target.name + " " + JSON.stringify(target) + "<br/>";
+  if (source != null && target != null) force.links().push({source:source, target:target});
+  restart();
+}
+
+function findNode(nodeName)
+{
+  var foundNode = null;
+  nodes.forEach(function(candidate){
+    if (candidate.name == nodeName) foundNode = candidate;
+  })
+  return foundNode;
 }
