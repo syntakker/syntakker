@@ -62,8 +62,8 @@ function tick(){
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function createNode() {
-  var newNodeName = document.getElementById("newNode").value;
+function createNode(newNodeName) {
+  newNodeName = newNodeName.toString();
   var nodeExists = false;
   nodes.forEach(function(candidate){
     if (candidate.name == newNodeName) nodeExists = true;

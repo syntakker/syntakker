@@ -45,6 +45,9 @@
                 border: #aaeeff solid 1px;
                 padding:3px;
             }
+            #nodelist {
+                padding-left:10px;
+            }
         </style>
     </head>
     <body>
@@ -54,10 +57,10 @@
                 <input type="text" id="newNode">
             </p>
             <p>
-                <input type="submit" id="createNode" value="Create" onclick="createNode()">
+                <input type="submit" id="createNode" value="Create" onclick="createNode(document.getElementById('newNode').value)">
             </p>
-            <p id="nodelist">
-            </p>
+            <div id="nodelist">
+            </div>
         </div>
 
         <script src="d3.v3.min.js"></script>
