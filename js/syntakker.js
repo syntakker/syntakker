@@ -87,9 +87,10 @@ function createLink(sourceName,targetName) {
 
 function findNode(nodeName)
 {
-  var foundNode = null;
-  nodes.forEach(function(candidate){
-    if (candidate.name == nodeName) foundNode = candidate;
-  })
-  return foundNode;
+  var length = nodes.length;
+  for (var i = 0; i < length; i++)
+  {
+    if (nodes[i].name == nodeName) return nodes[i];
+  }
+  return null;
 }
