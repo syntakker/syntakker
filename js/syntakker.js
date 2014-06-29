@@ -4,6 +4,8 @@ var width = 1400,
 var svg = d3.select("body").append("svg")
 .attr("width", width)
 .attr("height", height);
+svg.append("g").attr("class", "links");
+svg.append("g").attr("class", "nodes");
 
 var force = d3.layout.force()
 .gravity(.05)
@@ -13,8 +15,8 @@ var force = d3.layout.force()
 
 var nodes = force.nodes(),
     links = force.links(),
-    node = svg.selectAll(".node"),
-    link = svg.selectAll(".link");
+    node = svg.select(".nodes").selectAll(".node"),
+    link = svg.select(".links").selectAll(".link");
 
 d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
