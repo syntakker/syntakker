@@ -64,17 +64,24 @@ function tick(){
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function createNode(newNodeName) {
-  newNodeName = newNodeName.toString();
-  var nodeExists = false;
-  nodes.forEach(function(candidate){
-    if (candidate.name == newNodeName) nodeExists = true;
-  })
-  if (!nodeExists) force.nodes().push({name:newNodeName,x:0,y:0});
+function focusNode(nodeName) {
+  document.getElementById("focusedNode").innerHTML = nodeName;
   document.getElementById("nodelist").innerHTML = "";
   nodes.forEach(function(node){
-    document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + newNodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+    if (node.name != nodeName)
+    {
+      document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+    }
   })
+}
+
+function createNode(newNodeName) {
+  newNodeName = newNodeName.toString();
+  if (findNode(newNodeName) == null)
+  {
+    force.nodes().push({name:newNodeName,x:0,y:0});
+  }
+  focusNode(newNodeName);
   restart();
 }
 

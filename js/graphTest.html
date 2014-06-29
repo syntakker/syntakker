@@ -28,7 +28,7 @@
             .node text {
                 pointer-events: none;
                 font: 10px sans-serif;
-                stroke: #557788;
+                stroke: #66aabb;
             }
             .node circle {
                 stroke: #aaeeff;
@@ -48,7 +48,7 @@
                 width: 400px;
                 height: 100%;
                 border-left: #99ddee solid 1px;
-                padding:50px 10px;
+                padding: 0px 10px;
             }
             div.cockpit input {
                 background-color: rgba(0,0,0,0);
@@ -58,10 +58,19 @@
             #nodelist {
                 padding-left:10px;
             }
+            #focusedNode {
+                color: #99ddee;
+                font-weight: bold;
+                padding: 10px 0px;
+            }
         </style>
     </head>
     <body>
         <div class="cockpit" id="cockpit">
+            <div id="focusedNode">
+            </div>
+            <div id="nodelist">
+            </div>
             <p>
                 New node:<br/>
                 <input type="text" id="newNode">
@@ -69,8 +78,6 @@
             <p>
                 <input type="submit" id="createNode" value="Create" onclick="createNode(document.getElementById('newNode').value)">
             </p>
-            <div id="nodelist">
-            </div>
         </div>
 
         <script src="d3.v3.min.js"></script>
