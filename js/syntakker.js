@@ -8,7 +8,7 @@ svg.append("g").attr("class", "links");
 svg.append("g").attr("class", "nodes");
 
 var force = d3.layout.force()
-.gravity(.05)
+.gravity(.015)
 .distance(100)
 .charge(-100)
 .size([width, height]);
@@ -24,6 +24,31 @@ d3.json("syntakker.json", function(error, json) {
 
   restart();
 });
+
+function focusNode(nodeName) {
+  document.getElementById("focusedNode").innerHTML = nodeName;
+  document.getElementById("nodelist").innerHTML = "";
+  nodes.forEach(function(node){
+    if (node.name != nodeName)
+    {
+      document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+    }
+  })
+}
+
+function findNode(nodeName)
+{
+  for (var i = 0; i < nodes.length; i++)
+  {
+    if (nodes[i].name == nodeName) return nodes[i];
+  }
+  return null;
+}
+
+function onNodeClick(d)
+{
+  focusNode(d.name);
+}
 
 function restart()
 {
@@ -43,7 +68,8 @@ function restart()
   .call(force.drag);
 
   nodeEnter.append("circle")
-  .attr("r", 5);
+  .attr("r", 5)
+  .on("click",onNodeClick);
 
   nodeEnter.append("text")
   .attr("dx", 12)
@@ -64,17 +90,6 @@ function tick(){
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
 
-function focusNode(nodeName) {
-  document.getElementById("focusedNode").innerHTML = nodeName;
-  document.getElementById("nodelist").innerHTML = "";
-  nodes.forEach(function(node){
-    if (node.name != nodeName)
-    {
-      document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
-    }
-  })
-}
-
 function createNode(newNodeName) {
   newNodeName = newNodeName.toString();
   if (findNode(newNodeName) == null)
@@ -88,17 +103,6 @@ function createNode(newNodeName) {
 function createLink(sourceName,targetName) {
   source = findNode(sourceName);
   target = findNode(targetName);
-  //   if (source != null) document.getElementById("nodelist").innerHTML += "source: "+ source.name + " " + JSON.stringify(source) + "<br/>";
-  //   if (target != null) document.getElementById("nodelist").innerHTML += "target: "+ target.name + " " + JSON.stringify(target) + "<br/>";
   if (source != null && target != null) force.links().push({source:source, target:target});
   restart();
-}
-
-function findNode(nodeName)
-{
-  for (var i = 0; i < nodes.length; i++)
-  {
-    if (nodes[i].name == nodeName) return nodes[i];
-  }
-  return null;
 }
