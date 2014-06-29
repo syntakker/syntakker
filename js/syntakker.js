@@ -71,7 +71,7 @@ function createNode(newNodeName) {
   if (!nodeExists) force.nodes().push({name:newNodeName,x:0,y:0});
   document.getElementById("nodelist").innerHTML = "";
   nodes.forEach(function(node){
-    document.getElementById("nodelist").innerHTML += "<a onclick=\"createLink('" + newNodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+    document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + newNodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
   })
   restart();
 }
@@ -87,8 +87,7 @@ function createLink(sourceName,targetName) {
 
 function findNode(nodeName)
 {
-  var length = nodes.length;
-  for (var i = 0; i < length; i++)
+  for (var i = 0; i < nodes.length; i++)
   {
     if (nodes[i].name == nodeName) return nodes[i];
   }
