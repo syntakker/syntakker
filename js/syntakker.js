@@ -31,9 +31,19 @@ function focusNode(nodeName) {
   nodes.forEach(function(node){
     if (node.name != nodeName)
     {
-      document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+      if (findLink(nodeName, node.name) == null)
+      {
+        document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+      } else {
+        document.getElementById("nodelist").innerHTML += "- " + node.name + "<br/>";
+      }
     }
   })
+}
+
+function log(line)
+{
+  document.getElementById("log").innerHTML += line;
 }
 
 function findNode(nodeName)
@@ -41,6 +51,16 @@ function findNode(nodeName)
   for (var i = 0; i < nodes.length; i++)
   {
     if (nodes[i].name == nodeName) return nodes[i];
+  }
+  return null;
+}
+
+function findLink(sourceName, targetName)
+{
+  //   log("findLink: " + sourceName + ", " + targetName + "<br/>");
+  for (var i = 0; i < links.length; i++)
+  {
+    if (links[i].source.name == sourceName && links[i].target.name == targetName) return links[i];
   }
   return null;
 }
@@ -101,8 +121,12 @@ function createNode(newNodeName) {
 }
 
 function createLink(sourceName,targetName) {
-  source = findNode(sourceName);
-  target = findNode(targetName);
-  if (source != null && target != null) force.links().push({source:source, target:target});
-  restart();
+  if (findLink(sourceName, targetName) == null)
+  {
+    source = findNode(sourceName);
+    target = findNode(targetName);
+    if (source != null && target != null) force.links().push({source:source, target:target});
+    focusNode(sourceName);
+    restart();
+  }
 }
