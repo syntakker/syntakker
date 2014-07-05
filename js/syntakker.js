@@ -18,6 +18,8 @@ var nodes = force.nodes(),
     node = svg.select(".nodes").selectAll(".node"),
     link = svg.select(".links").selectAll(".link");
 
+var focusedNode;
+
 d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
@@ -35,10 +37,11 @@ function focusNode(nodeName) {
       {
         document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
       } else {
-        document.getElementById("nodelist").innerHTML += "- " + node.name + "<br/>";
+        document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
       }
     }
   })
+  focusedNode = nodeName;
 }
 
 function log(line)
@@ -57,12 +60,25 @@ function findNode(nodeName)
 
 function findLink(sourceName, targetName)
 {
-  //   log("findLink: " + sourceName + ", " + targetName + "<br/>");
   for (var i = 0; i < links.length; i++)
   {
     if (links[i].source.name == sourceName && links[i].target.name == targetName) return links[i];
   }
   return null;
+}
+
+function removeLink(sourceName, targetName)
+{
+  for (var i = 0; i < links.length; i++)
+  {
+    if (links[i].source.name == sourceName && links[i].target.name == targetName)
+      {
+        links.splice(i,1);
+        restart();
+        if (focusedNode) focusNode(focusedNode);
+        return;
+      }
+  }
 }
 
 function onNodeClick(d)
@@ -78,6 +94,9 @@ function restart()
   link.enter()
   .append("line")
   .attr("class", "link");
+
+  link.exit()
+  .remove();
 
   node = node
   .data(nodes);
