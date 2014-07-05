@@ -28,20 +28,27 @@ d3.json("syntakker.json", function(error, json) {
 });
 
 function focusNode(nodeName) {
-  document.getElementById("focusedNode").innerHTML = nodeName;
-  document.getElementById("nodelist").innerHTML = "";
-  nodes.forEach(function(node){
-    if (node.name != nodeName)
-    {
-      if (findLink(nodeName, node.name) == null)
+  if (nodeName)
+  {
+    document.getElementById("focusedNode").innerHTML = nodeName + " <a href=\"#\" onclick=\"removeNode('" + nodeName + "')\"><img src=\"img/remove.png\"/></a>";
+    document.getElementById("nodelist").innerHTML = "";
+    nodes.forEach(function(node){
+      if (node.name != nodeName)
       {
-        document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
-      } else {
-        document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
+        if (findLink(nodeName, node.name) == null)
+        {
+          document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+        } else {
+          document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
+        }
       }
-    }
-  })
-  focusedNode = nodeName;
+    })
+    focusedNode = nodeName;
+  } else {
+    document.getElementById("focusedNode").innerHTML = "no node in focus...";
+    document.getElementById("nodelist").innerHTML = "";
+    focusedNode = null;
+  }
 }
 
 function log(line)
@@ -67,17 +74,45 @@ function findLink(sourceName, targetName)
   return null;
 }
 
+function removeNode(nodeName)
+{
+  var remove = [];
+  for (var i = 0; i < links.length; i++)
+  {
+    if (links[i].source.name == nodeName || links[i].target.name == nodeName)
+    {
+      remove.push(i);
+    }
+  }
+  while (remove.length > 0)
+  {
+    links.splice(remove.pop(),1);
+  }
+  for (var i = 0; i < nodes.length; i++)
+  {
+    if (nodes[i].name == nodeName)
+    {
+      nodes.splice(i,1);
+      node.data(force.nodes(),function(d) {return d.name;}).exit().remove();
+      break;
+    }
+  }
+  focusNode(null);
+  restart();
+}
+
+
 function removeLink(sourceName, targetName)
 {
   for (var i = 0; i < links.length; i++)
   {
     if (links[i].source.name == sourceName && links[i].target.name == targetName)
-      {
-        links.splice(i,1);
-        restart();
-        if (focusedNode) focusNode(focusedNode);
-        return;
-      }
+    {
+      links.splice(i,1);
+      restart();
+      if (focusedNode) focusNode(focusedNode);
+      return;
+    }
   }
 }
 
@@ -99,7 +134,7 @@ function restart()
   .remove();
 
   node = node
-  .data(nodes);
+  .data(nodes, function(d) {return d.name;});
 
   var nodeEnter = node.enter()
   .append("g")
@@ -114,6 +149,9 @@ function restart()
   .attr("dx", 12)
   .attr("dy", ".35em")
   .text(function(d) { return d.name });
+
+  node.exit()
+  .remove();
 
   force.start();
 

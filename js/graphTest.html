@@ -71,17 +71,21 @@
                 font-weight: bold;
                 padding: 10px 0px;
             }
+            #log {
+                position: absolute;
+                bottom: 5px;
+            }
         </style>
     </head>
     <body>
         <div class="cockpit" id="cockpit">
+            <p>
+                <input type="text" id="newNode" onkeyup="if (event.keyCode == 13) createNode(document.getElementById('newNode').value)">
+            </p>
             <div id="focusedNode">
             </div>
             <div id="nodelist">
             </div>
-            <p>
-                <input type="text" id="newNode" onkeyup="if (event.keyCode == 13) createNode(document.getElementById('newNode').value)">
-            </p>
             <div id="log">
             </div>
         </div>
