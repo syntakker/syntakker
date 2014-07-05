@@ -30,7 +30,7 @@ d3.json("syntakker.json", function(error, json) {
 function focusNode(nodeName) {
   if (nodeName)
   {
-    document.getElementById("focusedNode").innerHTML = nodeName + " <a href=\"#\" onclick=\"removeNode('" + nodeName + "')\"><img src=\"img/remove.png\"/></a>";
+    document.getElementById("focusedNode").innerHTML = "<span class=\"focusNode\">" + nodeName + "</span> <a href=\"#\" onclick=\"removeNode('" + nodeName + "')\"><img src=\"img/remove.png\"/></a>";
     document.getElementById("nodelist").innerHTML = "";
     nodes.forEach(function(node){
       if (node.name != nodeName)
