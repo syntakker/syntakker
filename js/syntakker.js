@@ -23,7 +23,7 @@ var focusedNode;
 d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
-
+  focusNode(null);
   restart();
 });
 
