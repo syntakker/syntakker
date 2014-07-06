@@ -33,23 +33,29 @@ function focusNode(nodeName) {
     document.getElementById("focusedNode").innerHTML = "<span class=\"focusNode\">" + nodeName + "</span> <a href=\"#\" onclick=\"removeNode('" + nodeName + "')\"><img src=\"img/remove.png\"/></a>";
     document.getElementById("nodelist").innerHTML = "";
     focusedNode = nodeName;
+    nodes.forEach(function(node){
+      if (node.name != nodeName)
+      {
+        document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"focusNode('" + node.name + "')\"><img src=\"img/focus.png\"/></a> ";
+        if (findLink(nodeName, node.name) == null)
+        {
+          document.getElementById("nodelist").innerHTML += " <a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
+        } else {
+          document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
+        }
+      }
+    });
   } else {
     document.getElementById("focusedNode").innerHTML = "no node in focus...";
     document.getElementById("nodelist").innerHTML = "";
     focusedNode = null;
-  }
-  nodes.forEach(function(node){
-    if (node.name != nodeName)
-    {
-      document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"focusNode('" + node.name + "')\"><img src=\"img/focus.png\"/></a> ";
-      if (findLink(nodeName, node.name) == null)
+    nodes.forEach(function(node){
+      if (node.name != nodeName)
       {
-        document.getElementById("nodelist").innerHTML += " <a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
-      } else {
-        document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
+        document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"focusNode('" + node.name + "')\"><img src=\"img/focus.png\"/> " + node.name + "</a><br/>";
       }
-    }
-  });
+    });
+  }
 }
 
 function log(line)
