@@ -30,7 +30,7 @@ d3.json("syntakker.json", function(error, json) {
 });
 
 function focusNode(nodeName) {
-  if (nodeName)
+  if (findNode(nodeName))
   {
     document.getElementById("focusedNode").innerHTML = "<span class=\"focusNode\">" + nodeName + "</span> <a href=\"#\" onclick=\"removeNode('" + nodeName + "')\"><img src=\"img/remove.png\"/></a>";
     document.getElementById("nodelist").innerHTML = "";
@@ -61,22 +61,25 @@ function focusNode(nodeName) {
 }
 
 function focusLinkType(linkTypeName) {
-  focusedLinkType=findLinkType(linkTypeName);
-  if (linkTypeName)
+  if (findLinkType(linkTypeName))
   {
+    focusedLinkType=linkTypeName;
     document.getElementById("focusedLinkType").innerHTML = "<span class=\"focusLinktype\">" + linkTypeName + "</span> <a href=\"#\" onclick=\"removeNode('" + linkTypeName + "')\"><img src=\"img/remove.png\"/></a>";
     document.getElementById("linkTypeList").innerHTML = "";
     linkTypes.forEach(function (linkType) {
       if (linkTypeName != linkType.name)
       {
-        document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"></a><br/>";
+        document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"focusLinkType('" + linkType.name + "')\"><img src=\"img/focus.png\"/></a> ";
+        document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"toggleLinkType('" + linkType.name + "')\">" + (linkType.toggle?"<img src=\"img/checked.png\"/> ":"") + linkType.name + "</a><br/>";
       }
     });
   } else {
+    focusedLinkType = null;
     document.getElementById("focusedLinkType").innerHTML = "no links in focus...";
     document.getElementById("linkTypeList").innerHTML = "";
     linkTypes.forEach(function (linkType) {
-      document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"></a><br/>";
+        document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"focusLinkType('" + linkType.name + "')\"><img src=\"img/focus.png\"/></a> ";
+        document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"toggleLinkType('" + linkType.name + "')\">" + (linkType.toggle?"<img src=\"img/checked.png\"/> ":"") + linkType.name + "</a><br/>";
     });
   }
 }
@@ -230,8 +233,17 @@ function createLink(sourceName,targetName) {
 function createLinkType(newLinkTypeName) {
   if (findLinkType(newLinkTypeName) == null)
   {
-    var newLinkType = {name:newLinkTypeName};
+    var newLinkType = {name:newLinkTypeName, toggle:true};
     linkTypes.push(newLinkType);
   }
   focusLinkType(newLinkTypeName);
+}
+
+function toggleLinkType(linkTypeName) {
+  var linkType = findLinkType(linkTypeName);
+  if (linkType)
+  {
+    linkType.toggle = !linkType.toggle;
+    focusLinkType(focusedLinkType);
+  }
 }
