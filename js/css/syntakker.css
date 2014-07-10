@@ -39,11 +39,13 @@ a.linkedNode:hover {
   pointer-events: none;
   font: 10px sans-serif;
   stroke: #66aabb;
+  stroke: rgba(102,170,187,0.5);
 }
 .node circle {
   stroke: #aaeeff;
   stroke: rgba(170,238,255,0.5);
-  fill: #557788
+  fill: #557788;
+  fill: rgba(85,119,136,0.3);
 }
 .node:hover text {
   stroke: #aaeeff;
@@ -70,6 +72,14 @@ div.cockpit input {
   padding-left:10px;
 }
 #focusedNode .focusNode {
+  color: #99ddee;
+  font-weight: bold;
+  padding: 10px 0px;
+}
+#linkTypelist {
+  padding-left:10px;
+}
+#focusedLinkType .focusLinkType {
   color: #99ddee;
   font-weight: bold;
   padding: 10px 0px;

@@ -19,6 +19,7 @@ var nodes = force.nodes(),
     link = svg.select(".links").selectAll(".link");
 
 var focusedNode;
+var focusedLinkType;
 var linkTypes = [];
 
 d3.json("syntakker.json", function(error, json) {
@@ -55,6 +56,27 @@ function focusNode(nodeName) {
       {
         document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"focusNode('" + node.name + "')\"><img src=\"img/focus.png\"/> " + node.name + "</a><br/>";
       }
+    });
+  }
+}
+
+function focusLinkType(linkTypeName) {
+  focusedLinkType=findLinkType(linkTypeName);
+  if (linkTypeName)
+  {
+    document.getElementById("focusedLinkType").innerHTML = "<span class=\"focusLinktype\">" + linkTypeName + "</span> <a href=\"#\" onclick=\"removeNode('" + linkTypeName + "')\"><img src=\"img/remove.png\"/></a>";
+    document.getElementById("linkTypeList").innerHTML = "";
+    linkTypes.forEach(function (linkType) {
+      if (linkTypeName != linkType.name)
+      {
+        document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"></a><br/>";
+      }
+    });
+  } else {
+    document.getElementById("focusedLinkType").innerHTML = "no links in focus...";
+    document.getElementById("linkTypeList").innerHTML = "";
+    linkTypes.forEach(function (linkType) {
+      document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"></a><br/>";
     });
   }
 }
@@ -205,13 +227,11 @@ function createLink(sourceName,targetName) {
   }
 }
 
-function createLinkType(newLinkType) {
-  if (findLinkType(newLinkType) == null) {
-    linkTypes.push({name:newLinkType});
-    document.getElementById("linkTypeList").innerHTML = "";
-    linkTypes.forEach(function (linkType) {
-      document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"><img src=\"img/remove.png\"/></a><br/>";
-    });
-
+function createLinkType(newLinkTypeName) {
+  if (findLinkType(newLinkTypeName) == null)
+  {
+    var newLinkType = {name:newLinkTypeName};
+    linkTypes.push(newLinkType);
   }
+  focusLinkType(newLinkTypeName);
 }
