@@ -19,6 +19,7 @@ var nodes = force.nodes(),
     link = svg.select(".links").selectAll(".link");
 
 var focusedNode;
+var linkTypes = [];
 
 d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
@@ -77,6 +78,15 @@ function findLink(sourceName, targetName)
   for (var i = 0; i < links.length; i++)
   {
     if (links[i].source.name == sourceName && links[i].target.name == targetName) return links[i];
+  }
+  return null;
+}
+
+function findLinkType(linkTypeName)
+{
+  for (var i = 0; i < linkTypes.length; i++)
+  {
+    if (linkTypes[i].name == linkTypeName) return linkTypes[i];
   }
   return null;
 }
@@ -192,5 +202,16 @@ function createLink(sourceName,targetName) {
     if (source != null && target != null) force.links().push({source:source, target:target});
     focusNode(sourceName);
     restart();
+  }
+}
+
+function createLinkType(newLinkType) {
+  if (findLinkType(newLinkType) == null) {
+    linkTypes.push({name:newLinkType});
+    document.getElementById("linkTypeList").innerHTML = "";
+    linkTypes.forEach(function (linkType) {
+      document.getElementById("linkTypeList").innerHTML += "<img src=\"img/checked.png\"/> " + linkType.name + " <a href=\"#\" onclick=\"removeLinkType('" + linkType.name + "')\"><img src=\"img/remove.png\"/></a><br/>";
+    });
+
   }
 }

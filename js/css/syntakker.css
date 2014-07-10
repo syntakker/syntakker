@@ -1,0 +1,80 @@
+* {
+  color: #99ddee;
+  font-family: sans-serif;
+  font-size: 12px;
+}
+body {
+  background-color:#000;
+}
+h3 {
+  font-size: 14px;
+  color: #aaeeff;
+  font-weight: bold;
+  text-decoration: none;
+}
+a {
+  color: #557788;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  color: #aaeeff;
+}
+a.linkedNode {
+  color: #aaeeff;
+  font-weight: bold;
+  text-decoration: none;
+}
+a.linkedNode:hover {
+  color: #ffffff;
+}
+
+.link {
+  stroke: #557788;
+  stroke: rgba(85,119,136,0.3);
+  stroke-width: 2;
+}
+
+.node text {
+  pointer-events: none;
+  font: 10px sans-serif;
+  stroke: #66aabb;
+}
+.node circle {
+  stroke: #aaeeff;
+  stroke: rgba(170,238,255,0.5);
+  fill: #557788
+}
+.node:hover text {
+  stroke: #aaeeff;
+}
+.node:hover circle {
+  stroke: #aaeeff;
+  fill: #99ddee
+}
+div.cockpit {
+  position: absolute;
+  top: 0px;
+  right:0px;
+  width: 400px;
+  height: 100%;
+  border-left: #99ddee solid 1px;
+  padding: 0px 20px;
+}
+div.cockpit input {
+  background-color: rgba(0,0,0,0);
+  border: #aaeeff solid 1px;
+  padding:3px;
+}
+#nodelist {
+  padding-left:10px;
+}
+#focusedNode .focusNode {
+  color: #99ddee;
+  font-weight: bold;
+  padding: 10px 0px;
+}
+#log {
+  position: absolute;
+  bottom: 5px;
+}
