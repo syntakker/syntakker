@@ -28,6 +28,14 @@ a.linkedNode {
 a.linkedNode:hover {
   color: #ffffff;
 }
+a.activeLinkType {
+  color: #aaeeff;
+  font-weight: bold;
+  text-decoration: none;
+}
+a.activeLinkType:hover {
+  color: #ffffff;
+}
 
 .link {
   stroke: #557788;
