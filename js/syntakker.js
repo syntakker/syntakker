@@ -39,11 +39,13 @@ function focusNode(nodeName) {
       if (node.name != nodeName)
       {
         document.getElementById("nodelist").innerHTML += "<a href=\"#\" onclick=\"focusNode('" + node.name + "')\"><img src=\"img/focus.png\"/></a> ";
-        if (findLink(nodeName, node.name) == null)
+        var foundLink = findLink(nodeName, node.name)
+        if (foundLink == null)
         {
           document.getElementById("nodelist").innerHTML += " <a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
         } else {
-          document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> " + node.name + "</a><br/>";
+          document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> "
+          + node.name + (foundLink.linktype?" (" + foundLink.linktype + ")":"") +"</a><br/>";
         }
       }
     });
@@ -234,7 +236,12 @@ function createLink(sourceName,targetName) {
   {
     source = findNode(sourceName);
     target = findNode(targetName);
-    if (source != null && target != null) force.links().push({source:source, target:target});
+    if (source != null && target != null)
+    {
+      var newLink = {source:source, target:target};
+      if (focusedLinkType) newLink.linktype = focusedLinkType;
+      force.links().push(newLink);
+    }
     focusNode(sourceName);
     restart();
   }
