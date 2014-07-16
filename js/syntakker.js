@@ -182,7 +182,7 @@ function restart()
 
   link.enter()
   .append("line")
-  .attr("class", "link");
+  .attr("class", "link" + (focusedLinkType?" _" + focusedLinkType:""));
 
   link.exit()
   .remove();
@@ -261,6 +261,7 @@ function toggleLinkType(linkTypeName) {
   if (linkType)
   {
     linkType.toggle = !linkType.toggle;
+    svg.selectAll("line._" + linkTypeName).style("stroke",linkType.toggle?"#99ddee":"rgba(85,119,136,0.3)");
     focusLinkType(focusedLinkType);
   }
 }
