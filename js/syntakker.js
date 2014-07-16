@@ -216,7 +216,8 @@ function tick(){
   link.attr("x1", function(d) { return d.source.x; })
   .attr("y1", function(d) { return d.source.y; })
   .attr("x2", function(d) { return d.target.x; })
-  .attr("y2", function(d) { return d.target.y; });
+  .attr("y2", function(d) { return d.target.y; })
+  .style("stroke", function(d) { return d.toggle ? "#99ddee" : "rgba(85,119,136,0.3)" });
 
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
