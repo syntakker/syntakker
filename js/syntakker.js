@@ -45,7 +45,7 @@ function focusNode(nodeName) {
           document.getElementById("nodelist").innerHTML += " <a href=\"#\" onclick=\"createLink('" + nodeName + "','" + node.name + "')\">" + node.name + "</a><br/>";
         } else {
           document.getElementById("nodelist").innerHTML += "<a class=\"linkedNode\" href=\"#\" onclick=\"removeLink('" + nodeName + "','" + node.name + "')\"><img src=\"img/chain.png\"/> "
-          + node.name + (foundLink.linktype?" (" + foundLink.linktype + ")":"") +"</a><br/>";
+          + (foundLink.linktype?"(" + foundLink.linktype + ") ":"") + node.name +"</a><br/>";
         }
       }
     });
