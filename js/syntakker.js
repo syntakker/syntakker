@@ -20,7 +20,7 @@ var nodes = force.nodes(),
 
 var focusedNode;
 var focusedLinkType;
-var linkTypes = [];
+var linkTypes = {};
 
 d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
@@ -63,12 +63,16 @@ function focusNode(nodeName) {
 }
 
 function focusLinkType(linkTypeName) {
-  if (findLinkType(linkTypeName))
+  var thisLinkType = findLinkType(linkTypeName);
+  if (thisLinkType)
   {
+    thisLinkType.toggle = true;
     focusedLinkType=linkTypeName;
     document.getElementById("focusedLinkType").innerHTML = "<span class=\"focusLinktype\">" + linkTypeName + "</span> <a href=\"#\" onclick=\"removeLinkType('" + linkTypeName + "')\"><img src=\"img/remove.png\"/></a>";
     document.getElementById("linkTypeList").innerHTML = "";
-    linkTypes.forEach(function (linkType) {
+    for (var key in linkTypes)
+    {
+      var linkType = linkTypes[key];
       if (linkTypeName != linkType.name)
       {
         document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"focusLinkType('" + linkType.name + "')\"><img src=\"img/focus.png\"/></a> ";
@@ -79,12 +83,14 @@ function focusLinkType(linkTypeName) {
           document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"toggleLinkType('" + linkType.name + "')\">" + linkType.name + "</a><br/>";
         }
       }
-    });
+    }
   } else {
     focusedLinkType = null;
     document.getElementById("focusedLinkType").innerHTML = "no links in focus...";
     document.getElementById("linkTypeList").innerHTML = "";
-    linkTypes.forEach(function (linkType) {
+    for (var key in linkTypes)
+    {
+      var linkType = linkTypes[key];
       document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"focusLinkType('" + linkType.name + "')\"><img src=\"img/focus.png\"/></a> ";
       if (linkType.toggle)
       {
@@ -92,8 +98,9 @@ function focusLinkType(linkTypeName) {
       } else {
         document.getElementById("linkTypeList").innerHTML += "<a href=\"#\" onclick=\"toggleLinkType('" + linkType.name + "')\">" + linkType.name + "</a><br/>";
       }
-    });
+    }
   }
+  tick();
 }
 
 function log(line)
@@ -121,11 +128,7 @@ function findLink(sourceName, targetName)
 
 function findLinkType(linkTypeName)
 {
-  for (var i = 0; i < linkTypes.length; i++)
-  {
-    if (linkTypes[i].name == linkTypeName) return linkTypes[i];
-  }
-  return null;
+  return linkTypes[linkTypeName];
 }
 
 function removeNode(nodeName)
@@ -217,7 +220,14 @@ function tick(){
   .attr("y1", function(d) { return d.source.y; })
   .attr("x2", function(d) { return d.target.x; })
   .attr("y2", function(d) { return d.target.y; })
-  .style("stroke", function(d) { return d.toggle ? "#99ddee" : "rgba(85,119,136,0.3)" });
+  .style("stroke", function(d) {
+    var linkType = findLinkType(d.linktype);
+    if (linkType)
+    {
+      return linkType.toggle ? "#99ddee" : "rgba(85,119,136,0.3)"
+    }
+    return "rgba(85,119,136,0.3)";
+  });
 
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 }
@@ -252,7 +262,7 @@ function createLinkType(newLinkTypeName) {
   if (findLinkType(newLinkTypeName) == null)
   {
     var newLinkType = {name:newLinkTypeName, toggle:true};
-    linkTypes.push(newLinkType);
+    linkTypes[newLinkTypeName] = newLinkType;
   }
   focusLinkType(newLinkTypeName);
 }
@@ -262,7 +272,7 @@ function toggleLinkType(linkTypeName) {
   if (linkType)
   {
     linkType.toggle = !linkType.toggle;
-    svg.selectAll("line._" + linkTypeName).style("stroke",linkType.toggle?"#99ddee":"rgba(85,119,136,0.3)");
     focusLinkType(focusedLinkType);
   }
+  tick();
 }
