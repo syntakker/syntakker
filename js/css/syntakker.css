@@ -96,3 +96,17 @@ div.cockpit input {
   position: absolute;
   bottom: 5px;
 }
+#export {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  padding:20px;
+  border: #aaeeff solid 1px;
+  background-color: #000;
+  display: none;
+}
+#exportClose {
+  padding:10px;
+}

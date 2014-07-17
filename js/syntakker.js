@@ -276,3 +276,12 @@ function toggleLinkType(linkTypeName) {
   }
   tick();
 }
+
+function exportGraph() {
+  log("enter");
+  d3.select("#export").style("display","block");
+  var exportWindow = d3.select("#exportWindow");
+  log("found");
+  exportWindow.html(JSON.stringify({nodes:nodes, links:links, linkTypes:linkTypes}));
+  exportWindow.style("display","block");
+}
