@@ -2,7 +2,6 @@ all: test
 
 build:
 	ocamlbuild -use-ocamlfind -cflags -thread,-annot,-bin-annot begriffTest.native
-	ocamlbuild -use-ocamlfind -cflags -thread,-annot,-bin-annot begriffTest.byte
 	ocamlbuild -use-ocamlfind -cflags -thread,-annot,-bin-annot syntakker.docdir/index.html
 
 test: build
