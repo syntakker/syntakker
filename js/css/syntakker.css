@@ -104,9 +104,11 @@ div.cockpit input {
   left: 10%;
   padding:20px;
   border: #aaeeff solid 1px;
-  background-color: #000;
+  background-color: rgba(0,0,0,0.7);
   display: none;
 }
 #exportClose {
-  padding:10px;
+  position: absolute;
+  right: 4px;
+  top: 4px;
 }

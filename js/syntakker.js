@@ -22,10 +22,12 @@ var focusedNode;
 var focusedLinkType;
 var linkTypes = {};
 
-d3.json("syntakker.json", function(error, json) {
+d3.json("test.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
+  linkTypes=json.linkTypes;
   focusNode(null);
+  focusLinkType(null)
   restart();
 });
 
@@ -86,7 +88,7 @@ function focusLinkType(linkTypeName) {
     }
   } else {
     focusedLinkType = null;
-    document.getElementById("focusedLinkType").innerHTML = "no links in focus...";
+    document.getElementById("focusedLinkType").innerHTML = "no link in focus...";
     document.getElementById("linkTypeList").innerHTML = "";
     for (var key in linkTypes)
     {
@@ -282,6 +284,9 @@ function exportGraph() {
   d3.select("#export").style("display","block");
   var exportWindow = d3.select("#exportWindow");
   log("found");
-  exportWindow.html(JSON.stringify({nodes:nodes, links:links, linkTypes:linkTypes}));
+  var exportObject = {nodes:[], links:[], linkTypes:linkTypes};
+  nodes.forEach(function (d) {exportObject.nodes.push({name:d.name})});
+  links.forEach(function (d) {exportObject.links.push({source:d.source.index, target:d.target.index, linktype:d.linktype})});
+  exportWindow.html(JSON.stringify(exportObject));
   exportWindow.style("display","block");
 }
