@@ -46,8 +46,8 @@ a.activeLinkType:hover {
 .node text {
   pointer-events: none;
   font: 10px sans-serif;
-  stroke: #66aabb;
-  stroke: rgba(102,170,187,0.5);
+  fill: #66aabb;
+  fill: rgba(102,170,187,0.5);
 }
 .node circle {
   stroke: #aaeeff;
@@ -56,7 +56,7 @@ a.activeLinkType:hover {
   fill: rgba(85,119,136,0.3);
 }
 .node:hover text {
-  stroke: #aaeeff;
+  fill: #aaeeff;
 }
 .node:hover circle {
   stroke: #aaeeff;

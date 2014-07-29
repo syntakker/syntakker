@@ -22,7 +22,7 @@ var focusedNode;
 var focusedLinkType;
 var linkTypes = {};
 
-d3.json("test.json", function(error, json) {
+d3.json("syntakker.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
   linkTypes=json.linkTypes;
@@ -280,10 +280,8 @@ function toggleLinkType(linkTypeName) {
 }
 
 function exportGraph() {
-  log("enter");
   d3.select("#export").style("display","block");
   var exportWindow = d3.select("#exportWindow");
-  log("found");
   var exportObject = {nodes:[], links:[], linkTypes:linkTypes};
   nodes.forEach(function (d) {exportObject.nodes.push({name:d.name})});
   links.forEach(function (d) {exportObject.links.push({source:d.source.index, target:d.target.index, linktype:d.linktype})});
