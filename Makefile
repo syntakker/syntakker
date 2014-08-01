@@ -10,6 +10,7 @@ test: build
 clean:
 	find . -name '_build' | xargs rm -rf
 	find . -name '*.native' | xargs rm -f
+	find . -name '*.byte' | xargs rm -f
 	find . -name '*~' | xargs rm -f
 	rm -f *.docdir
 
