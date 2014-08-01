@@ -137,7 +137,7 @@ Test.add_simple_test ~title:"\"_\" is node 0" (fun () ->
 
 Test.add_simple_test ~title:"pattern matching" (fun () ->
   let plan = Begriff.empty_plan () in
-  let expr = Begriff.of_string "((acht cola) (acht bier))" plan in
+  let _ = Begriff.of_string "((acht cola) (acht bier))" plan in
   let pattern1 = Begriff.of_string "(acht _)" plan in
   let result1 = Begriff.find_matches pattern1 plan in
   Assert.equal ~msg:"Result 1 should have three entries"
