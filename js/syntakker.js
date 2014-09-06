@@ -10,7 +10,7 @@ svg.append("g").attr("class", "nodes");
 var force = d3.layout.force()
 .gravity(.015)
 .distance(100)
-.charge(-100)
+.charge(-200)
 .size([width, height]);
 
 var nodes = force.nodes(),
