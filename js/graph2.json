@@ -1,0 +1,1 @@
+{"nodes":[{"name":"me"},{"name":"world"}],"links":[{"source":0,"target":1,"linktype":"to"}],"linkTypes":{"to":{"name":"to","toggle":true}}}

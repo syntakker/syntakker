@@ -22,7 +22,7 @@ var focusedNode;
 var focusedLinkType;
 var linkTypes = {};
 
-d3.json("syntakker.json", function(error, json) {
+d3.json("graph2.json", function(error, json) {
   json.nodes.map(function (node) {force.nodes().push(node)});
   json.links.map(function (link) {force.links().push(link)});
   linkTypes=json.linkTypes;
